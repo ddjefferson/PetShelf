@@ -1,137 +1,110 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./css/index.css" />
-    <title>PetShelf</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    />
-  </head>
 
-  <body>
-    <header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./css/index.css" />
+  <title>PetShelf</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+</head>
 
-      <!-- Top Nav Bar Starts -->
-      <nav class="navbar is-white has shadow">
-        <div class="navbar-brand">
-          <!-- TODO: insert link -->
-          <a class="navbar-item" href="#">
-            <img
-              src="img/logo2transparent.png"
-              alt="PetShelf: The source for first time pet owners"
-              style="max-height: 125px"
-              class="py-2 px-2"
-            />
-          </a>
-          <div
-            class="navbar-burger"
-            data-target="navbarExampleTransparentExample"
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+<body>
+  <header>
+
+    <!-- Top Nav Bar Starts -->
+    <nav class="navbar is-white has shadow">
+      <div class="navbar-brand">
+        <!-- TODO: insert link -->
+        <a class="navbar-item" href="#">
+          <img src="img/logo2transparent.png" alt="PetShelf: The source for first time pet owners"
+            style="max-height: 125px" class="py-2 px-2" />
+        </a>
+        <div class="navbar-burger" data-target="navbarExampleTransparentExample">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
+      </div>
 
-        <div id="navbarExampleTransparentExample" class="navbar-menu">
-          <div class="navbar-start">
-            <a class="navbar-item" href="#"> New Pet Owner </a>
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link" href="#"> FAQs </a>
-              <div class="navbar-dropdown is-boxed">
-                <a class="navbar-item" href="#"> Resources </a>
+      <div id="navbarExampleTransparentExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="#"> New Pet Owner </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="#"> FAQs </a>
+            <div class="navbar-dropdown is-boxed">
+              <a class="navbar-item" href="#"> Resources </a>
 
-                <hr class="navbar-divider" />
-                <a class="navbar-item" href="#"> N/A </a>
-                <a class="navbar-item is-active" href="#"> N/A </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="field is-grouped">
-                <p class="control">
-                  <a
-                    class="bd-heart-button button"
-                    data-social-network="#"
-                    data-social-action="#"
-                    data-social-target="#"
-                    target="#"
-                    href="#"
-                  >
-                    <span
-                      ><img
-                        src="img/heart-icon1.png"
-                        alt="heart-icon1"
-                        style="max-height: 50px"
-                        class="py-2 px-2"
-                    /></span>
-                  </a>
-                </p>
-                <p class="control">
-                  <a
-                    class="bd-heart-button button"
-                    data-social-network="#"
-                    data-social-action="#"
-                    data-social-target="#"
-                    target="#"
-                    href="#"
-                  >
-                    <span
-                      ><img
-                        src="img/book-logo.png"
-                        alt="heart-icon1"
-                        style="max-height: 50px"
-                        class="py-2 px-2"
-                    /></span>
-                  </a>
-                </p>
-              </div>
+              <hr class="navbar-divider" />
+              <a class="navbar-item" href="#"> N/A </a>
+              <a class="navbar-item is-active" href="#"> N/A </a>
             </div>
           </div>
         </div>
-      </nav>
-       <!-- Top Nav Bar Starts -->
-      
-       <!-- Breadcrumbs -->
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="field is-grouped">
+              <p class="control">
+                <a class="bd-heart-button button" data-social-network="#" data-social-action="#" data-social-target="#"
+                  target="#" href="#">
+                  <span><img src="img/heart.png" alt="heart-icon1" style="max-height: 50px" class="py-2 px-2" /></span>
+                </a>
+              </p>
+              <p class="control">
+                <a class="bd-heart-button button" data-social-network="#" data-social-action="#" data-social-target="#"
+                  target="#" href="#">
+                  <span><img src="img/book.png" alt="heart-icon1" style="max-height: 50px" class="py-2 px-2" /></span>
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Top Nav Bar Ends -->
+
+    <!-- Breadcrumbs -->
     <div class="section pt-4 pb-0">
       <nav class="breadcrumb has-arrow-separator">
-      <ul class="container is-size-6">
-        <li><a class="has-text-grey">PetShelf</a></li>
-        <li><a class="has-text-grey">New Pet Owner</a></li>
-        <li class="is-active"><a>Resources</a></li>
+        <ul class="container is-size-6">
+          <li><a class="has-text-grey">PetShelf</a></li>
+          <li><a class="has-text-grey">New Pet Owner</a></li>
+          <li class="is-active"><a>Resources</a></li>
       </nav>
       </ul>
     </div>
     <!-- Breadcrumbs end -->
 
 
-    </header>
-    <section class="section">
-      <div class="container">
-        <!-- <h1 class="title">Pet Shelf</h1> -->
-        <div class="cat-dog-tiles">
-          <div class="cat-tile">
-            <img src="img/cat.jpg" alt="" />
-            <h3>Cat?</h3>
-          </div>
-          <div class="dog tile">
-            <img src="img/dog.png" alt="" />
-            <h3>Dog?</h3>
-          </div>
+  </header>
+  <section class="section">
+    <div class="container">
+      <div class="columns cat-dog-tiles">
+        <div class="column is-half cat-card">
+          <a href="#">
+            <img style="width: 100%; object-fit: cover; aspect-ratio: 1/1;"src="img/cat3.png" alt="">
+            <h3 class="overlay">Cat?</h3>
+          </a>
         </div>
-        <div class="funfact-housing"></div>
-        <div class="search-button"></div>
+        <div class="column is-half dog-card">
+          <a href="#">
+            <img style="width: 100%; object-fit: cover; aspect-ratio: 1/1;"src="img/dog.png" alt="">
+            <h3 class="overlay">Dog?</h3>
+          </a>
+        </div>
       </div>
-    </section>
-  </body>
-  <footer class="footer">
-    <div class="content has-text-centered">
-      <p><strong>PetShelf</strong> by <a href="#">SCD</a> &copy; 2022</p>
-    </div>
-  </footer>
+      </div>
+
+      <div class="funfact-housing"> funfact</div>
+      <div class="search-button">search button</div>
+    
+  </section>
+</body>
+<footer class="footer">
+  <div class="content has-text-centered">
+    <p><strong>PetShelf</strong> by <a href="#">SCD</a> &copy; 2022</p>
+  </div>
+</footer>
+
 </html>
