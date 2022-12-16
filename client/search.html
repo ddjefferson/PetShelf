@@ -5,14 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/ico" href="./img/logo2transparent.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="./css/search.css" />
     <title>Pet Shelf | Search</title>
   </head>
   <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <nav
+      class="navbar is-primary"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div class="container">
         <div class="navbar-brand">
-          <a class="navbar-item" href="https://bulma.io"> PetShelf </a>
+          <a class="navbar-item" href="./index.html"> PetShelf </a>
 
           <a
             role="button"
@@ -27,11 +38,13 @@
         </div>
       </div>
     </nav>
-    <form id="searchForm">
-      <label for="searchInput">Search</label>
-      <input type="text" id="searchInput" name="searchInput" required />
-      <input type="submit" value="Search" />
-    </form>
+    <!-- Types of animals that can be searched. -->
+    <div class="container">
+      <h1 class="has-text-centered">What are you searching for?</h1>
+      <div id="animalTypes" class="columns is-multiline"></div>
+      <div id="searchResults" class="columns is-multiline my-2"></div>
+    </div>
+
     <script src="./js/search.js"></script>
   </body>
 </html>
