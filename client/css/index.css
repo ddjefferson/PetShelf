@@ -1,0 +1,11 @@
+.cat-dog-tiles{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cat-tile{
+
+}
+.dog-tile{
+    size-adjust: 50%;
+}
