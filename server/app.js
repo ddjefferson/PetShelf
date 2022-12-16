@@ -29,6 +29,8 @@ app.get("/token", async (req, res) => {
 
   try {
     const response = await axios.post(URL, params, config);
+    response.data.expires_at = Date.now() + response.data.expires_in;
+    delete response.data.expires_in;
     res.status(200).send({ success: true, data: response.data });
   } catch (e) {
     console.log(e);
