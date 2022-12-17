@@ -42,12 +42,16 @@ function displayTypeButtons(types) {
 }
 
 async function displayResults(e) {
+  const anchor = e.target.closest(`[${ANIMAL_TYPE_ATTRIB}]`);
+  // Ignore if it's already the current animal selected.
+  if (anchor.classList.contains("is-primary")) {
+    return;
+  }
   // Highlight button of selected animal.
   document.querySelectorAll("#animalTypes a").forEach((a) => {
     a.classList.remove("is-primary");
     a.classList.add("is-white");
   });
-  const anchor = e.target.closest(`[${ANIMAL_TYPE_ATTRIB}]`);
   anchor.classList.add("is-primary");
 
   // Get animals of depending on button's animal type.
@@ -174,15 +178,14 @@ async function getPetFinderData(url) {
 }
 
 function createPagination(pagination) {
+  console.log(pagination);
   const { count_per_page, current_page, total_count, total_pages } = pagination;
   console.log("current page: ", current_page, "total_pages: ", total_pages);
   const {
-    _links: { next },
+    _links: { next, previous },
   } = pagination;
 
   const MAX_BUTTONS = 5;
-
-  const paginationNav = document.querySelector(".pagination");
 
   if (total_pages > 1) {
     const ul = document.querySelector(".pagination .pagination-list");
@@ -199,7 +202,7 @@ function createPagination(pagination) {
     pageNumbers.forEach((n) => {
       content += `
       <li>
-        <a class="pagination-link" aria-label="Goto page ${n}">${n}</a>
+        <a class="pagination-link" aria-label="Goto page ${n}" data-page=${n}>${n}</a>
       </li>
       `;
     });
@@ -234,24 +237,20 @@ function createPagination(pagination) {
       );
     }
 
+    const prevBtn = document.querySelector(".pagination-previous");
     if (current_page > 1) {
-      paginationNav
-        .querySelector(".pagination-previous")
-        .classList.remove("is-hidden");
+      prevBtn.classList.remove("is-hidden");
+      prevBtn.setAttribute("data-page", previous.href);
     } else {
-      paginationNav
-        .querySelector(".pagination-previous")
-        .classList.add("is-hidden");
+      prevBtn.classList.add("is-hidden");
     }
 
+    const nextBtn = document.querySelector(".pagination-next");
     if (current_page < total_pages) {
-      paginationNav
-        .querySelector(".pagination-next")
-        .classList.remove("is-hidden");
+      nextBtn.classList.remove("is-hidden");
+      nextBtn.setAttribute("data-page", next.href);
     } else {
-      paginationNav
-        .querySelector(".pagination-next")
-        .classList.add("is-hidden");
+      nextBtn.classList.add("is-hidden");
     }
   }
 }
