@@ -5,33 +5,110 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/ico" href="./img/logo2transparent.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="./css/search.css" />
     <title>Pet Shelf | Search</title>
   </head>
   <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="container">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="https://bulma.io"> PetShelf </a>
+    <!-- Top Nav Bar Starts -->
+    <nav class="navbar is-white has shadow">
+      <div class="navbar-brand">
+        <!-- TODO: insert link -->
+        <a class="navbar-item" href="./index.html">
+          <img
+            src="img/logo2transparent.png"
+            alt="PetShelf: The source for first time pet owners"
+            style="max-height: 125px"
+            class="py-2 px-2"
+          />
+        </a>
+        <div
+          class="navbar-burger"
+          data-target="navbarExampleTransparentExample"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
 
-          <a
-            role="button"
-            class="navbar-burger"
-            aria-label="menu"
-            aria-expanded="false"
-          >
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
+      <div id="navbarExampleTransparentExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="./newOwner.html"> New Pet Owner </a>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link" href="#"> FAQs </a>
+            <div class="navbar-dropdown is-boxed">
+              <a class="navbar-item" href="./resources.html"> Resources </a>
+
+              <hr class="navbar-divider" />
+              <a class="navbar-item" href="#"> N/A </a>
+              <a class="navbar-item is-active" href="#"> N/A </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="field is-grouped">
+              <p class="control">
+                <a
+                  class="bd-heart-button button"
+                  data-social-network="#"
+                  data-social-action="#"
+                  data-social-target="#"
+                  target="#"
+                  href="./favorites.html"
+                >
+                  <span
+                    ><img
+                      src="img/heart.png"
+                      alt="heart-icon1"
+                      style="max-height: 50px"
+                      class="py-2 px-2"
+                  /></span>
+                </a>
+              </p>
+              <p class="control">
+                <a
+                  class="bd-heart-button button"
+                  data-social-network="#"
+                  data-social-action="#"
+                  data-social-target="#"
+                  target="#"
+                  href="./savedResources.html"
+                >
+                  <span
+                    ><img
+                      src="img/book.png"
+                      alt="heart-icon1"
+                      style="max-height: 50px"
+                      class="py-2 px-2"
+                  /></span>
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
-    <form id="searchForm">
-      <label for="searchInput">Search</label>
-      <input type="text" id="searchInput" name="searchInput" required />
-      <input type="submit" value="Search" />
-    </form>
+    <!-- Types of animals that can be searched. -->
+    <div class="container">
+      <h1 class="has-text-centered">What are you searching for?</h1>
+      <div id="animalTypes" class="columns is-multiline"></div>
+      <div id="searchResults" class="columns is-multiline my-2"></div>
+      <nav class="pagination" role="navigation" aria-label="pagination">
+        <a class="pagination-previous is-hidden">Previous</a>
+        <a class="pagination-next is-hidden">Next page</a>
+        <ul class="pagination-list"></ul>
+      </nav>
+    </div>
+
     <script src="./js/search.js"></script>
   </body>
 </html>
