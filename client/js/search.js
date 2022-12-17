@@ -2,67 +2,89 @@
 const API_KEY = "";
 const API_SECRET = "";
 const LS_KEY = "petshelf-data";
-const PETFINDER_URL = "https://api.petfinder.com/v2";
+const PETFINDER_URL = "https://api.petfinder.com";
 
-const ANIMALS_URI = "/animals";
-const ANIMAL_TYPES_URI = "/types";
-const ANIMAL_BREEDS_URI = "/breeds";
+const ANIMALS_URI = "/v2/animals";
+const ANIMAL_TYPES_URI = "/v2/types";
 
 const ANIMAL_TYPE_ATTRIB = "data-animal-type";
+const ANIMAL_BREED_ATTRIB = "data-animal-breed";
 const SEARCH_RESULTS_ID = "searchResults";
+
+const ANIMAL_TYPES_ID = "animalTypes";
 
 window.addEventListener("load", async () => {
   const data = await getAnimalTypes();
   displayTypeButtons(data.types);
 });
 
+/**
+ * UI functions
+ */
 function displayTypeButtons(types) {
-  const animalTypes = document.getElementById("animalTypes");
+  const animalTypes = document.getElementById(ANIMAL_TYPES_ID);
   console.log(types);
   types.forEach((type) => {
-    const {
-      name,
-      _links: { self },
-    } = type;
-    // const animalType = self.href.split("/").pop();
-    const col = document.createElement("div");
-    col.classList = "column is-one-quarter";
-    col.innerHTML = `
+    const col = createAnimalTypeButton(type);
+    animalTypes.append(col);
+  });
+}
+
+function createAnimalTypeButton(type) {
+  const { name, _links } = type;
+  const col = document.createElement("div");
+  col.classList = "column is-one-quarter";
+  col.innerHTML = `
     <div class="card">
-      <a ${ANIMAL_TYPE_ATTRIB}="${name}" class="button is-fullwidth is-white">
+      <a ${ANIMAL_TYPE_ATTRIB}="${_links.self.href}" 
+        ${ANIMAL_BREED_ATTRIB}="${_links.breeds.href}" 
+        class="button is-fullwidth is-white"
+      >
         <div class="card-content">
           <div class="content">${name}</div>
         </div>
       </a>
     </div>
     `;
-    col.querySelector("a").addEventListener("click", displayResults);
-    animalTypes.append(col);
-  });
+  const anchor = col.querySelector("a");
+  anchor.addEventListener("click", handleAnimalTypeClick);
+  return col;
 }
 
-async function displayResults(e) {
-  const anchor = e.target.closest(`[${ANIMAL_TYPE_ATTRIB}]`);
-  // Ignore if it's already the current animal selected.
-  if (anchor.classList.contains("is-primary")) {
-    return;
+function handleAnimalTypeClick(e) {
+  const anchor = e.target.closest(`a[${ANIMAL_TYPE_ATTRIB}]`);
+  if (!anchor.classList.contains("is-primary")) {
+    // Make this anchor the only one with class primary.
+    document.querySelectorAll(`#${ANIMAL_TYPES_ID} a`).forEach((a) => {
+      a.classList.remove("is-primary");
+      a.classList.add("is-white");
+    });
+    anchor.classList.add("is-primary");
+    // Display the results associated with this button.
+    const typeURI = anchor.getAttribute(ANIMAL_TYPE_ATTRIB);
+    const animalType = typeURI.split("/").pop();
+    console.log(animalType);
+    const pageURI = `${ANIMALS_URI}?type=${animalType}`;
+    console.log(pageURI);
+    displayResults(pageURI);
   }
-  // Highlight button of selected animal.
-  document.querySelectorAll("#animalTypes a").forEach((a) => {
-    a.classList.remove("is-primary");
-    a.classList.add("is-white");
-  });
-  anchor.classList.add("is-primary");
+}
 
-  // Get animals of depending on button's animal type.
-  const animalType = anchor.getAttribute(ANIMAL_TYPE_ATTRIB);
+async function displayResults(uri) {
   const searchResults = document.getElementById(SEARCH_RESULTS_ID);
-  searchResults.classList.toggle("loading");
-  const data = await getAnimals({ type: animalType });
-  searchResults.classList.toggle("loading");
 
-  // Display the animals.
+  // Loading animation while getting results.
+  const LOADING_CLASS = "loading";
+  searchResults.classList.add(LOADING_CLASS);
+  console.log(uri);
+  const url = new URL(PETFINDER_URL + uri);
+  console.log(url);
+  const data = await getPetFinderData(url);
+  searchResults.classList.remove(LOADING_CLASS);
+
   clearSearchResults();
+
+  // Display new results.
   console.log(data);
   data.animals.forEach((animal) => {
     const col = createAnimalCard(animal);
@@ -100,81 +122,8 @@ function createAnimalCard(animal) {
 
 function clearSearchResults() {
   const searchResults = document.getElementById(SEARCH_RESULTS_ID);
-  while (searchResults.childElementCount > 1)
-    searchResults.lastElementChild.remove();
-}
-
-//
-async function getAnimals(params) {
-  const url = new URL(`${PETFINDER_URL}${ANIMALS_URI}`);
-  url.search = new URLSearchParams(params);
-  return getPetFinderData(url, params);
-}
-
-async function getAnimalById(id) {
-  const url = new URL(`${PETFINDER_URL}${ANIMALS_URI}/${id}`);
-  return getPetFinderData(url);
-}
-
-async function getAnimalTypes() {
-  const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}`;
-  return getPetFinderData(url);
-}
-
-async function getSingleAnimalType(type) {
-  const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}`;
-  return getPetFinderData(url);
-}
-
-async function getAnimalBreeds(type) {
-  const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}${ANIMAL_BREEDS_URI}`;
-  return getPetFinderData(url);
-}
-
-async function getAccessToken() {
-  // See if it always exists in local storage.
-  const appData = getAppData();
-  if (!isTokenValid(appData)) {
-    appData.auth = await getNewAccessToken();
-    saveAppData(appData);
-  } else {
-    console.log("Already have a token!");
-  }
-  return appData.auth.access_token;
-}
-
-function getAppData() {
-  return JSON.parse(localStorage.getItem(LS_KEY)) || {};
-}
-
-async function getNewAccessToken() {
-  const res = await fetch("http://127.0.0.1:5000/token");
-  const { data, success } = await res.json();
-  return data;
-}
-
-function saveAppData(appData) {
-  localStorage.setItem(LS_KEY, JSON.stringify(appData));
-}
-
-// Has token and it has not expired.
-function isTokenValid(auth) {
-  return auth && Date.now() < auth.expires_at;
-}
-
-async function getAuthHeaders() {
-  const token = await getAccessToken();
-  return { Authorization: `Bearer ${token}` };
-}
-
-async function getPetFinderData(url) {
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  while (searchResults.firstElementChild)
+    searchResults.firstElementChild.remove();
 }
 
 function createPagination(pagination) {
@@ -283,4 +232,86 @@ function createPagination(pagination) {
     </li>
   </ul>
 </nav> */
+}
+
+/**
+ * PetFinder API requests.
+ */
+async function getAnimals(params) {
+  const url = new URL(`${PETFINDER_URL}${ANIMALS_URI}`);
+  url.search = new URLSearchParams(params);
+  return getPetFinderData(url, params);
+}
+
+async function getAnimalById(id) {
+  const url = new URL(`${PETFINDER_URL}${ANIMALS_URI}/${id}`);
+  return getPetFinderData(url);
+}
+
+async function getAnimalTypes() {
+  const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}`;
+  return getPetFinderData(url);
+}
+
+async function getSingleAnimalType(type) {
+  const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}`;
+  return getPetFinderData(url);
+}
+
+async function getAnimalBreeds(type) {
+  const BREEDS = "/breeds";
+  const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}${BREEDS}`;
+  return getPetFinderData(url);
+}
+
+/**
+ * Token request to our server.
+ */
+async function getAccessToken() {
+  // See if it always exists in local storage.
+  const appData = getAppData();
+  if (!isTokenValid(appData)) {
+    appData.auth = await getNewAccessToken();
+    saveAppData(appData);
+  } else {
+    console.log("Already have a token!");
+  }
+  return appData.auth.access_token;
+}
+
+async function getNewAccessToken() {
+  const res = await fetch("http://127.0.0.1:5000/token");
+  const { data, success } = await res.json();
+  return data;
+}
+
+// Has token and it has not expired.
+function isTokenValid(auth) {
+  return auth && Date.now() < auth.expires_at;
+}
+
+async function getAuthHeaders() {
+  const token = await getAccessToken();
+  return { Authorization: `Bearer ${token}` };
+}
+
+async function getPetFinderData(url) {
+  // Prepare headers
+  const headers = await getAuthHeaders();
+
+  // Get the data
+  const res = await fetch(url, { headers });
+  const data = await res.json();
+  return data;
+}
+
+/**
+ * Local Storage Functions
+ */
+function getAppData() {
+  return JSON.parse(localStorage.getItem(LS_KEY)) || {};
+}
+
+function saveAppData(appData) {
+  localStorage.setItem(LS_KEY, JSON.stringify(appData));
 }
