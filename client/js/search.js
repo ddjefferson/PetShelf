@@ -82,7 +82,7 @@ async function displayResults(uri) {
   const data = await getPetFinderData(url);
   searchResults.classList.remove(LOADING_CLASS);
 
-  clearSearchResults();
+  clearChildren(searchResults);
 
   // Display new results.
   console.log(data);
@@ -103,7 +103,7 @@ function createAnimalCard(animal) {
     "column is-one-quarter-tablet is-flex is-justify-content-center";
   col.innerHTML = `
   <div class="card is-flex-grow-1">
-    <a href="#" target="_blank" rel="noopener">
+    <a href="${url}" target="_blank" rel="noopener">
       <div class="card-image">
         <img
           style="width: 100%; object-fit: cover; aspect-ratio: 1/1"
@@ -120,118 +120,65 @@ function createAnimalCard(animal) {
   return col;
 }
 
-function clearSearchResults() {
-  const searchResults = document.getElementById(SEARCH_RESULTS_ID);
-  while (searchResults.firstElementChild)
-    searchResults.firstElementChild.remove();
+function clearChildren(parent) {
+  while (parent.firstElementChild) parent.firstElementChild.remove();
 }
 
 function createPagination(pagination) {
-  console.log(pagination);
-  const { count_per_page, current_page, total_count, total_pages } = pagination;
-  console.log("current page: ", current_page, "total_pages: ", total_pages);
-  const {
-    _links: { next, previous },
-  } = pagination;
-
-  const MAX_BUTTONS = 5;
-
-  if (total_pages > 1) {
-    const ul = document.querySelector(".pagination .pagination-list");
-    let content = "";
-    let pageNumbers = [1];
-    for (
-      let i = Math.max(2, current_page - 1);
-      i < total_pages - 1 && pageNumbers.length < MAX_BUTTONS - 1;
-      i++
-    ) {
-      pageNumbers.push(i);
-    }
-    pageNumbers.push(total_pages);
-    pageNumbers.forEach((n) => {
-      content += `
-      <li>
-        <a class="pagination-link" aria-label="Goto page ${n}" data-page=${n}>${n}</a>
-      </li>
-      `;
-    });
-
-    ul.innerHTML = content;
-    const currentIndex = pageNumbers.indexOf(current_page);
-    const currentLink = ul.children[currentIndex].querySelector("a");
-    currentLink.classList.add("is-current");
-    currentLink.setAttribute("aria-current", "page");
-
-    // Add ellipses next to 1
-    if (total_pages > MAX_BUTTONS && current_page > 3) {
-      ul.firstElementChild.insertAdjacentHTML(
-        "afterend",
-        `
-      <li>
-        <span class="pagination-ellipsis">&hellip;</span>
-      </li>
-      `
-      );
-    }
-
-    // Add ellipses next to last page
-    if (total_pages > MAX_BUTTONS && total_pages - current_page > 2) {
-      ul.lastElementChild.insertAdjacentHTML(
-        "beforebegin",
-        `
-      <li>
-        <span class="pagination-ellipsis">&hellip;</span>
-      </li>
-      `
-      );
-    }
-
-    const prevBtn = document.querySelector(".pagination-previous");
-    if (current_page > 1) {
-      prevBtn.classList.remove("is-hidden");
-      prevBtn.setAttribute("data-page", previous.href);
-    } else {
-      prevBtn.classList.add("is-hidden");
-    }
-
-    const nextBtn = document.querySelector(".pagination-next");
-    if (current_page < total_pages) {
-      nextBtn.classList.remove("is-hidden");
-      nextBtn.setAttribute("data-page", next.href);
-    } else {
-      nextBtn.classList.add("is-hidden");
-    }
+  const pagNav = document.querySelector("nav.pagination");
+  const ul = pagNav.querySelector(".pagination-list");
+  clearChildren(ul);
+  if (pagination.total_pages <= 1) {
+    return;
   }
-}
 
-{
-  /* <nav class="pagination" role="navigation" aria-label="pagination">
-  <a class="pagination-previous">Previous</a>
-  <a class="pagination-next">Next page</a>
-  <ul class="pagination-list">
-    <li>
-      <a class="pagination-link" aria-label="Goto page 1">1</a>
-    </li>
-    <li>
-      <span class="pagination-ellipsis">&hellip;</span>
-    </li>
-    <li>
-      <a class="pagination-link" aria-label="Goto page 45">45</a>
-    </li>
-    <li>
-      <a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
-    </li>
-    <li>
-      <a class="pagination-link" aria-label="Goto page 47">47</a>
-    </li>
-    <li>
-      <span class="pagination-ellipsis">&hellip;</span>
-    </li>
-    <li>
-      <a class="pagination-link" aria-label="Goto page 86">86</a>
-    </li>
-  </ul>
-</nav> */
+  // Destructure pagination data.
+  const { current_page: current, total_pages: total, _links } = pagination;
+  const { next, previous } = _links;
+
+  // Compute pagination numbers.
+  const MAX = 5; // number of buttons to show at most.
+  const nums = [1, total];
+  for (let i = Math.max(2, current); i < total && nums.length < MAX; i++) {
+    nums.splice(nums.length - 1, 0, i); // Insert the number.
+  }
+
+  // Add buttons to UI.
+  nums.forEach((n) => {
+    ul.innerHTML += `<li><a class="pagination-link" aria-label="Goto page ${n}" data-page=${n}>${n}</a></li>`;
+  });
+
+  // Style button for current page.
+  const currentIndex = nums.indexOf(current);
+  const currentLink = ul.children[currentIndex].querySelector("a");
+  currentLink.classList.add("is-current");
+  currentLink.setAttribute("aria-current", "page");
+
+  // Decide if to display ellipses next to first and last page.
+  const ellipsesMinDistance = MAX / 2;
+  const ellipses = "<li><span class='pagination-ellipsis'>&hellip;</span</li>";
+  if (current - 1 > ellipsesMinDistance) {
+    ul.firstElementChild.insertAdjacentElement("afterend", ellipses);
+  }
+
+  if (MAX - current > ellipsesMinDistance) {
+    ul.lastElementChild.insertAdjacentHTML("beforebegin", ellipses);
+  }
+
+  // Decide if to display prev and next buttons.
+  const prevBtn = document.querySelector(".pagination-previous");
+  if (current > 1) {
+    prevBtn.classList.remove("is-hidden");
+  } else {
+    prevBtn.classList.add("is-hidden");
+  }
+
+  const nextBtn = document.querySelector(".pagination-next");
+  if (current < total) {
+    nextBtn.classList.remove("is-hidden");
+  } else {
+    nextBtn.classList.add("is-hidden");
+  }
 }
 
 /**
