@@ -1,8 +1,5 @@
 @charset "utf-8";
 
-// Import a Google Font
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
-
 // Set your brand colors
 $brown: #682F11;
 
@@ -13,3 +10,11 @@ $primary: $brown;
 
 // Import only what you need from Bulma
 @import "../node_modules/bulma/bulma.sass";
+
+#searchResults {
+    transition: opacity 0.4s;
+}
+
+#searchResults.loading {
+    opacity: 0.5;
+}

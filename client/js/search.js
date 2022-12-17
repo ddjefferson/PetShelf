@@ -52,12 +52,13 @@ async function displayResults(e) {
 
   // Get animals of depending on button's animal type.
   const animalType = anchor.getAttribute(ANIMAL_TYPE_ATTRIB);
-  console.log(animalType);
+  const searchResults = document.getElementById(SEARCH_RESULTS_ID);
+  searchResults.classList.toggle("loading");
   const data = await getAnimals({ type: animalType });
+  searchResults.classList.toggle("loading");
 
   // Display the animals.
   clearSearchResults();
-  const searchResults = document.getElementById(SEARCH_RESULTS_ID);
   data.animals.forEach((animal) => {
     const col = createAnimalCard(animal);
     searchResults.append(col);
@@ -65,15 +66,14 @@ async function displayResults(e) {
 }
 
 function createAnimalCard(animal) {
-  {
-    const { name, age, gender, url, id, primary_photo_cropped } = animal;
-    const col = document.createElement("col");
-    const imageSrc = primary_photo_cropped
-      ? `src="${primary_photo_cropped.small}"`
-      : "";
-    col.classList =
-      "column is-one-quarter-tablet is-flex is-justify-content-center";
-    col.innerHTML = `
+  const { name, age, gender, url, id, primary_photo_cropped } = animal;
+  const col = document.createElement("col");
+  const imageSrc = primary_photo_cropped
+    ? `src="${primary_photo_cropped.small}"`
+    : "";
+  col.classList =
+    "column is-one-quarter-tablet is-flex is-justify-content-center";
+  col.innerHTML = `
   <div class="card is-flex-grow-1">
     <a href="#" target="_blank" rel="noopener">
       <div class="card-image">
@@ -89,80 +89,40 @@ function createAnimalCard(animal) {
     </div>
   </div>
   `;
-    return col;
-  }
+  return col;
 }
 
 function clearSearchResults() {
   const searchResults = document.getElementById(SEARCH_RESULTS_ID);
-  while (searchResults.firstElementChild)
-    searchResults.firstElementChild.remove();
+  while (searchResults.childElementCount > 1)
+    searchResults.lastElementChild.remove();
 }
 
 //
 async function getAnimals(params) {
-  // Prepare URL
   const url = new URL(`${PETFINDER_URL}${ANIMALS_URI}`);
   url.search = new URLSearchParams(params);
-
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  return getPetFinderData(url, params);
 }
 
 async function getAnimalById(id) {
-  // Prepare URL
   const url = new URL(`${PETFINDER_URL}${ANIMALS_URI}/${id}`);
-
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  return getPetFinderData(url);
 }
 
 async function getAnimalTypes() {
-  // Prepare URL
   const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}`;
-
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  return getPetFinderData(url);
 }
 
 async function getSingleAnimalType(type) {
-  // Prepare URL
   const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}`;
-
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  return getPetFinderData(url);
 }
 
 async function getAnimalBreeds(type) {
-  // Prepare URL
   const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}${ANIMAL_BREEDS_URI}`;
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  return getPetFinderData(url);
 }
 
 async function getAccessToken() {
@@ -199,4 +159,14 @@ function isTokenValid(auth) {
 async function getAuthHeaders() {
   const token = await getAccessToken();
   return { Authorization: `Bearer ${token}` };
+}
+
+async function getPetFinderData(url) {
+  // Prepare headers
+  const headers = await getAuthHeaders();
+
+  // Get the data
+  const res = await fetch(url, { headers });
+  const data = await res.json();
+  return data;
 }
