@@ -43,11 +43,11 @@ function displayTypeButtons(types) {
 
 async function displayResults(e) {
   // Highlight button of selected animal.
-  const anchor = e.target.closest(`[${ANIMAL_TYPE_ATTRIB}]`);
   document.querySelectorAll("#animalTypes a").forEach((a) => {
     a.classList.remove("is-primary");
     a.classList.add("is-white");
   });
+  const anchor = e.target.closest(`[${ANIMAL_TYPE_ATTRIB}]`);
   anchor.classList.add("is-primary");
 
   // Get animals of depending on button's animal type.
@@ -59,10 +59,12 @@ async function displayResults(e) {
 
   // Display the animals.
   clearSearchResults();
+  console.log(data);
   data.animals.forEach((animal) => {
     const col = createAnimalCard(animal);
     searchResults.append(col);
   });
+  createPagination(data.pagination);
 }
 
 function createAnimalCard(animal) {
@@ -169,4 +171,117 @@ async function getPetFinderData(url) {
   const res = await fetch(url, { headers });
   const data = await res.json();
   return data;
+}
+
+function createPagination(pagination) {
+  const { count_per_page, current_page, total_count, total_pages } = pagination;
+  console.log("current page: ", current_page, "total_pages: ", total_pages);
+  const {
+    _links: { next },
+  } = pagination;
+
+  const MAX_BUTTONS = 5;
+
+  const paginationNav = document.querySelector(".pagination");
+
+  if (total_pages > 1) {
+    const ul = document.querySelector(".pagination .pagination-list");
+    let content = "";
+    let pageNumbers = [1];
+    for (
+      let i = Math.max(2, current_page - 1);
+      i < total_pages - 1 && pageNumbers.length < MAX_BUTTONS - 1;
+      i++
+    ) {
+      pageNumbers.push(i);
+    }
+    pageNumbers.push(total_pages);
+    pageNumbers.forEach((n) => {
+      content += `
+      <li>
+        <a class="pagination-link" aria-label="Goto page ${n}">${n}</a>
+      </li>
+      `;
+    });
+
+    ul.innerHTML = content;
+    const currentIndex = pageNumbers.indexOf(current_page);
+    const currentLink = ul.children[currentIndex].querySelector("a");
+    currentLink.classList.add("is-current");
+    currentLink.setAttribute("aria-current", "page");
+
+    // Add ellipses next to 1
+    if (total_pages > MAX_BUTTONS && current_page > 3) {
+      ul.firstElementChild.insertAdjacentHTML(
+        "afterend",
+        `
+      <li>
+        <span class="pagination-ellipsis">&hellip;</span>
+      </li>
+      `
+      );
+    }
+
+    // Add ellipses next to last page
+    if (total_pages > MAX_BUTTONS && total_pages - current_page > 2) {
+      ul.lastElementChild.insertAdjacentHTML(
+        "beforebegin",
+        `
+      <li>
+        <span class="pagination-ellipsis">&hellip;</span>
+      </li>
+      `
+      );
+    }
+
+    if (current_page > 1) {
+      paginationNav
+        .querySelector(".pagination-previous")
+        .classList.remove("is-hidden");
+    } else {
+      paginationNav
+        .querySelector(".pagination-previous")
+        .classList.add("is-hidden");
+    }
+
+    if (current_page < total_pages) {
+      paginationNav
+        .querySelector(".pagination-next")
+        .classList.remove("is-hidden");
+    } else {
+      paginationNav
+        .querySelector(".pagination-next")
+        .classList.add("is-hidden");
+    }
+  }
+}
+
+{
+  /* <nav class="pagination" role="navigation" aria-label="pagination">
+  <a class="pagination-previous">Previous</a>
+  <a class="pagination-next">Next page</a>
+  <ul class="pagination-list">
+    <li>
+      <a class="pagination-link" aria-label="Goto page 1">1</a>
+    </li>
+    <li>
+      <span class="pagination-ellipsis">&hellip;</span>
+    </li>
+    <li>
+      <a class="pagination-link" aria-label="Goto page 45">45</a>
+    </li>
+    <li>
+      <a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
+    </li>
+    <li>
+      <a class="pagination-link" aria-label="Goto page 47">47</a>
+    </li>
+    <li>
+      <span class="pagination-ellipsis">&hellip;</span>
+    </li>
+    <li>
+      <a class="pagination-link" aria-label="Goto page 86">86</a>
+    </li>
+  </ul>
+</nav> */
 }
