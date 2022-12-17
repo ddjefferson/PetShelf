@@ -3,11 +3,102 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="./css/index.css" />
+    <title>PetShelf</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
     />
   </head>
-  <body></body>
+  <body>
+    <header>
+      <!-- Top NavBar Starts -->
+      <nav class="navbar is-transparent">
+        <div class="navbar-brand">
+          <!-- TODO: insert link -->
+          <a class="navbar-item" href="#">
+            <img
+              src="img/logo2transparent.png"
+              alt="PetShelf: The source for first time pet owners"
+              style="max-height: 125px"
+              class="py-2 px-2"
+            />
+          </a>
+          <div
+            class="navbar-burger"
+            data-target="navbarExampleTransparentExample"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div id="navbarExampleTransparentExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="#"> New Pet Owner </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link" href="#"> FAQs </a>
+            </div>
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="field is-grouped">
+                <p class="control">
+                  <a
+                    class="bd-heart-button button"
+                    data-social-network="#"
+                    data-social-action="#"
+                    data-social-target="#"
+                    target="#"
+                    href="#"
+                  >
+                    <span class="icon">
+                      <!-- <i class="fab fa-twitter"></i> -->
+                    </span>
+                    <span
+                      ><img
+                        src="img/heart-icon1.png"
+                        alt="heart-icon1"
+                        style="max-height: 50px"
+                        class="py-2 px-2"
+                    /></span>
+                  </a>
+                </p>
+                <p class="control">
+                  <a class="button" href="#">
+                    <span class="icon">
+                      <!-- <i class="fas fa-download"></i> -->
+                    </span>
+                    <span>
+                      <img
+                        src="img/book-logo.png"
+                        alt="book logo"
+                        style="max-height: 50px"
+                        class="py-2 px-2"
+                    /></span>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <!-- Top NavBar Starts -->
+
+       <!-- Breadcrumbs  Start-->
+       <div class="section pt-4 pb-0">
+        <nav class="breadcrumb has-arrow-separator">
+        <ul class="container is-size-6">
+          <li><a class="has-text-grey">PetShelf</a></li>
+          <li><a class="has-text-grey">New Pet Owner</a></li>
+          <li class="is-active"><a>Resources</a></li>
+        </nav>
+        </ul>
+      </div>
+      <!-- Breadcrumbs end -->
+
+    </header>
+  </body>
 </html>
