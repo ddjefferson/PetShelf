@@ -2,94 +2,232 @@
 const API_KEY = "";
 const API_SECRET = "";
 const LS_KEY = "petshelf-data";
-const PETFINDER_URL = "https://api.petfinder.com/v2";
+const PETFINDER_URL = "https://api.petfinder.com";
 
-const ANIMALS_URI = "/animals";
-const ANIMAL_TYPES_URI = "/types";
-const ANIMAL_BREEDS_URI = "/breeds";
+const ANIMALS_URI = "/v2/animals";
+const ANIMAL_TYPES_URI = "/v2/types";
 
-const searchForm = document.getElementById("searchForm");
+const ANIMAL_TYPE_ATTRIB = "data-animal-type";
+const ANIMAL_BREED_ATTRIB = "data-animal-breed";
+const PAG_NAV_URI_ATTRIB = "page-navigation-uri";
+const PAG_NAV_PAGE_ATTRIBUTE = "data-page";
+const SEARCH_RESULTS_ID = "searchResults";
 
-searchForm.addEventListener("submit", handleSearchSubmit);
+const ANIMAL_TYPES_ID = "animalTypes";
 
-async function handleSearchSubmit(e) {
-  e.preventDefault();
-  const input = e.target.elements.searchInput.value;
-  // const animals = await getAnimals();
-  // const dogs = await getAnimals({ type: "Dogs" });
-  // const animal = await getAnimalById(59179795);
-  // const types = await getAnimalTypes();
-  // const type = await getSingleAnimalType("Dog");
-  // const breed = await getAnimalBreeds("Dog");
-  console.log(breed);
+window.addEventListener("load", async () => {
+  const data = await getAnimalTypes();
+  displayTypeButtons(data.types);
+  const pagNav = document.querySelector("nav.pagination");
+  pagNav.addEventListener("click", handlePaginationClick);
+});
+
+/**
+ * UI functions
+ */
+function displayTypeButtons(types) {
+  const animalTypes = document.getElementById(ANIMAL_TYPES_ID);
+  types.forEach((type) => {
+    const col = createAnimalTypeButton(type);
+    animalTypes.append(col);
+  });
 }
 
-//
+function createAnimalTypeButton(type) {
+  const { name, _links } = type;
+  const col = document.createElement("div");
+  col.classList = "column is-one-quarter";
+  col.innerHTML = `
+    <div class="card">
+      <a ${ANIMAL_TYPE_ATTRIB}="${_links.self.href}" 
+        ${ANIMAL_BREED_ATTRIB}="${_links.breeds.href}" 
+        class="button is-fullwidth is-white"
+      >
+        <div class="card-content">
+          <div class="content">${name}</div>
+        </div>
+      </a>
+    </div>
+    `;
+  const anchor = col.querySelector("a");
+  anchor.addEventListener("click", handleAnimalTypeClick);
+  return col;
+}
+
+function handleAnimalTypeClick(e) {
+  const anchor = e.target.closest(`a[${ANIMAL_TYPE_ATTRIB}]`);
+  if (!anchor.classList.contains("is-primary")) {
+    // Make this anchor the only one with class primary.
+    document.querySelectorAll(`#${ANIMAL_TYPES_ID} a`).forEach((a) => {
+      a.classList.remove("is-primary");
+      a.classList.add("is-white");
+    });
+    anchor.classList.add("is-primary");
+    // Display the results associated with this button.
+    const typeURI = anchor.getAttribute(ANIMAL_TYPE_ATTRIB);
+    const animalType = typeURI.split("/").pop();
+    const pageURI = `${ANIMALS_URI}?type=${animalType}`;
+    displayResults(pageURI);
+  }
+}
+
+async function displayResults(uri) {
+  const searchResults = document.getElementById(SEARCH_RESULTS_ID);
+
+  // Loading animation while getting results.
+  const LOADING_CLASS = "loading";
+  searchResults.classList.add(LOADING_CLASS);
+  const url = new URL(PETFINDER_URL + uri);
+  const data = await getPetFinderData(url);
+  searchResults.classList.remove(LOADING_CLASS);
+
+  clearChildren(searchResults);
+
+  // Display new results.
+  data.animals.forEach((animal) => {
+    const col = createAnimalCard(animal);
+    searchResults.append(col);
+  });
+  createPagination(data.pagination);
+  searchResults.scrollIntoView();
+}
+
+function createAnimalCard(animal) {
+  const { name, age, gender, url, id, primary_photo_cropped } = animal;
+  const col = document.createElement("col");
+  const imageSrc = primary_photo_cropped
+    ? `src="${primary_photo_cropped.small}"`
+    : "";
+  col.classList =
+    "column is-one-quarter-tablet is-flex is-justify-content-center";
+  col.innerHTML = `
+  <div class="card is-flex-grow-1">
+    <a href="${url}" target="_blank" rel="noopener">
+      <div class="card-image">
+        <img
+          style="width: 100%; object-fit: cover; aspect-ratio: 1/1"
+          ${imageSrc}
+          alt="${name}"
+        />
+      </div>
+    </a>
+    <div class="card-content">
+      <div class="content">${name} ${gender} ${age}</div>
+    </div>
+  </div>
+  `;
+  return col;
+}
+
+function clearChildren(parent) {
+  while (parent.firstElementChild) parent.firstElementChild.remove();
+}
+
+function handlePaginationClick(e) {
+  const page = e.target.getAttribute(PAG_NAV_PAGE_ATTRIBUTE);
+
+  if (page) {
+    const pagNav = document.querySelector(".pagination");
+    let uri = pagNav.getAttribute(PAG_NAV_URI_ATTRIB);
+    uri = uri.replace(/page=[\d]+/, `page=${page}`);
+    displayResults(uri);
+  }
+}
+
+function createPagination(pagination) {
+  const pagNav = document.querySelector("nav.pagination");
+  const ul = pagNav.querySelector(".pagination-list");
+  clearChildren(ul);
+  if (pagination.total_pages <= 1) {
+    return;
+  }
+
+  // Destructure pagination data.
+  const { current_page: current, total_pages: total, _links } = pagination;
+  const { next, previous } = _links;
+
+  pagNav.setAttribute(PAG_NAV_URI_ATTRIB, next?.href || previous?.href);
+
+  // Compute pagination numbers.
+  const MAX = 5; // number of buttons to show at most.
+  const nums = [1, total];
+  for (let i = Math.max(2, current - 1); i < total && nums.length < MAX; i++) {
+    nums.splice(nums.length - 1, 0, i); // Insert the number.
+  }
+
+  // Add buttons to UI.
+  nums.forEach((n) => {
+    ul.innerHTML += `<li><a class="pagination-link" aria-label="Goto page ${n}" ${PAG_NAV_PAGE_ATTRIBUTE}=${n}>${n}</a></li>`;
+  });
+
+  // Style button for current page.
+  const currentIndex = nums.indexOf(current);
+  const currentLink = ul.children[currentIndex].querySelector("a");
+  currentLink.classList.add("is-current");
+  currentLink.setAttribute("aria-current", "page");
+
+  // Decide if to display ellipses next to first and last page.
+  const ellipsesMinDistance = MAX / 2;
+  const ellipses = "<li><span class='pagination-ellipsis'>&hellip;</span</li>";
+  if (current - 1 > ellipsesMinDistance) {
+    ul.firstElementChild.insertAdjacentHTML("afterend", ellipses);
+  }
+
+  if (total - current > ellipsesMinDistance) {
+    ul.lastElementChild.insertAdjacentHTML("beforebegin", ellipses);
+  }
+
+  // Decide if to display prev and next buttons.
+  const prevBtn = document.querySelector(".pagination-previous");
+  if (current > 1) {
+    prevBtn.classList.remove("is-hidden");
+    prevBtn.setAttribute(PAG_NAV_PAGE_ATTRIBUTE, current - 1);
+  } else {
+    prevBtn.classList.add("is-hidden");
+  }
+
+  const nextBtn = document.querySelector(".pagination-next");
+  if (current < total) {
+    nextBtn.classList.remove("is-hidden");
+    nextBtn.setAttribute(PAG_NAV_PAGE_ATTRIBUTE, current + 1);
+  } else {
+    nextBtn.classList.add("is-hidden");
+  }
+}
+
+/**
+ * PetFinder API requests.
+ */
 async function getAnimals(params) {
-  // Prepare URL
   const url = new URL(`${PETFINDER_URL}${ANIMALS_URI}`);
-  url.params = new URLSearchParams(params);
-
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  url.search = new URLSearchParams(params);
+  return getPetFinderData(url, params);
 }
 
 async function getAnimalById(id) {
-  // Prepare URL
   const url = new URL(`${PETFINDER_URL}${ANIMALS_URI}/${id}`);
-
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  return getPetFinderData(url);
 }
 
 async function getAnimalTypes() {
-  // Prepare URL
   const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}`;
-
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  return getPetFinderData(url);
 }
 
 async function getSingleAnimalType(type) {
-  // Prepare URL
   const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}`;
-
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  return getPetFinderData(url);
 }
 
 async function getAnimalBreeds(type) {
-  // Prepare URL
-  const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}${ANIMAL_BREEDS_URI}`;
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
+  const BREEDS = "/breeds";
+  const url = `${PETFINDER_URL}${ANIMAL_TYPES_URI}/${type}${BREEDS}`;
+  return getPetFinderData(url);
 }
 
+/**
+ * Token request to our server.
+ */
 async function getAccessToken() {
   // See if it always exists in local storage.
   const appData = getAppData();
@@ -102,18 +240,10 @@ async function getAccessToken() {
   return appData.auth.access_token;
 }
 
-function getAppData() {
-  return JSON.parse(localStorage.getItem(LS_KEY)) || {};
-}
-
 async function getNewAccessToken() {
   const res = await fetch("http://127.0.0.1:5000/token");
   const { data, success } = await res.json();
   return data;
-}
-
-function saveAppData(appData) {
-  localStorage.setItem(LS_KEY, JSON.stringify(appData));
 }
 
 // Has token and it has not expired.
@@ -124,4 +254,25 @@ function isTokenValid(auth) {
 async function getAuthHeaders() {
   const token = await getAccessToken();
   return { Authorization: `Bearer ${token}` };
+}
+
+async function getPetFinderData(url) {
+  // Prepare headers
+  const headers = await getAuthHeaders();
+
+  // Get the data
+  const res = await fetch(url, { headers });
+  const data = await res.json();
+  return data;
+}
+
+/**
+ * Local Storage Functions
+ */
+function getAppData() {
+  return JSON.parse(localStorage.getItem(LS_KEY)) || {};
+}
+
+function saveAppData(appData) {
+  localStorage.setItem(LS_KEY, JSON.stringify(appData));
 }
