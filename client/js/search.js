@@ -9,6 +9,8 @@ const ANIMAL_TYPES_URI = "/v2/types";
 
 const ANIMAL_TYPE_ATTRIB = "data-animal-type";
 const ANIMAL_BREED_ATTRIB = "data-animal-breed";
+const PAG_NAV_URI_ATTRIB = "page-navigation-uri";
+const PAG_NAV_PAGE_ATTRIBUTE = "data-page";
 const SEARCH_RESULTS_ID = "searchResults";
 
 const ANIMAL_TYPES_ID = "animalTypes";
@@ -16,6 +18,8 @@ const ANIMAL_TYPES_ID = "animalTypes";
 window.addEventListener("load", async () => {
   const data = await getAnimalTypes();
   displayTypeButtons(data.types);
+  const pagNav = document.querySelector("nav.pagination");
+  pagNav.addEventListener("click", handlePaginationClick);
 });
 
 /**
@@ -23,7 +27,6 @@ window.addEventListener("load", async () => {
  */
 function displayTypeButtons(types) {
   const animalTypes = document.getElementById(ANIMAL_TYPES_ID);
-  console.log(types);
   types.forEach((type) => {
     const col = createAnimalTypeButton(type);
     animalTypes.append(col);
@@ -63,9 +66,7 @@ function handleAnimalTypeClick(e) {
     // Display the results associated with this button.
     const typeURI = anchor.getAttribute(ANIMAL_TYPE_ATTRIB);
     const animalType = typeURI.split("/").pop();
-    console.log(animalType);
     const pageURI = `${ANIMALS_URI}?type=${animalType}`;
-    console.log(pageURI);
     displayResults(pageURI);
   }
 }
@@ -76,21 +77,19 @@ async function displayResults(uri) {
   // Loading animation while getting results.
   const LOADING_CLASS = "loading";
   searchResults.classList.add(LOADING_CLASS);
-  console.log(uri);
   const url = new URL(PETFINDER_URL + uri);
-  console.log(url);
   const data = await getPetFinderData(url);
   searchResults.classList.remove(LOADING_CLASS);
 
   clearChildren(searchResults);
 
   // Display new results.
-  console.log(data);
   data.animals.forEach((animal) => {
     const col = createAnimalCard(animal);
     searchResults.append(col);
   });
   createPagination(data.pagination);
+  searchResults.scrollIntoView();
 }
 
 function createAnimalCard(animal) {
@@ -124,6 +123,17 @@ function clearChildren(parent) {
   while (parent.firstElementChild) parent.firstElementChild.remove();
 }
 
+function handlePaginationClick(e) {
+  const page = e.target.getAttribute(PAG_NAV_PAGE_ATTRIBUTE);
+
+  if (page) {
+    const pagNav = document.querySelector(".pagination");
+    let uri = pagNav.getAttribute(PAG_NAV_URI_ATTRIB);
+    uri = uri.replace(/page=[\d]+/, `page=${page}`);
+    displayResults(uri);
+  }
+}
+
 function createPagination(pagination) {
   const pagNav = document.querySelector("nav.pagination");
   const ul = pagNav.querySelector(".pagination-list");
@@ -136,16 +146,18 @@ function createPagination(pagination) {
   const { current_page: current, total_pages: total, _links } = pagination;
   const { next, previous } = _links;
 
+  pagNav.setAttribute(PAG_NAV_URI_ATTRIB, next?.href || previous?.href);
+
   // Compute pagination numbers.
   const MAX = 5; // number of buttons to show at most.
   const nums = [1, total];
-  for (let i = Math.max(2, current); i < total && nums.length < MAX; i++) {
+  for (let i = Math.max(2, current - 1); i < total && nums.length < MAX; i++) {
     nums.splice(nums.length - 1, 0, i); // Insert the number.
   }
 
   // Add buttons to UI.
   nums.forEach((n) => {
-    ul.innerHTML += `<li><a class="pagination-link" aria-label="Goto page ${n}" data-page=${n}>${n}</a></li>`;
+    ul.innerHTML += `<li><a class="pagination-link" aria-label="Goto page ${n}" ${PAG_NAV_PAGE_ATTRIBUTE}=${n}>${n}</a></li>`;
   });
 
   // Style button for current page.
@@ -158,10 +170,10 @@ function createPagination(pagination) {
   const ellipsesMinDistance = MAX / 2;
   const ellipses = "<li><span class='pagination-ellipsis'>&hellip;</span</li>";
   if (current - 1 > ellipsesMinDistance) {
-    ul.firstElementChild.insertAdjacentElement("afterend", ellipses);
+    ul.firstElementChild.insertAdjacentHTML("afterend", ellipses);
   }
 
-  if (MAX - current > ellipsesMinDistance) {
+  if (total - current > ellipsesMinDistance) {
     ul.lastElementChild.insertAdjacentHTML("beforebegin", ellipses);
   }
 
@@ -169,6 +181,7 @@ function createPagination(pagination) {
   const prevBtn = document.querySelector(".pagination-previous");
   if (current > 1) {
     prevBtn.classList.remove("is-hidden");
+    prevBtn.setAttribute(PAG_NAV_PAGE_ATTRIBUTE, current - 1);
   } else {
     prevBtn.classList.add("is-hidden");
   }
@@ -176,6 +189,7 @@ function createPagination(pagination) {
   const nextBtn = document.querySelector(".pagination-next");
   if (current < total) {
     nextBtn.classList.remove("is-hidden");
+    nextBtn.setAttribute(PAG_NAV_PAGE_ATTRIBUTE, current + 1);
   } else {
     nextBtn.classList.add("is-hidden");
   }
