@@ -12,47 +12,40 @@ const ANIMAL_BREED_ATTRIB = "data-animal-breed";
 const PAG_NAV_URI_ATTRIB = "page-navigation-uri";
 const PAG_NAV_PAGE_ATTRIBUTE = "data-page";
 const SEARCH_RESULTS_ID = "searchResults";
+const SEARCH_MODAL_ID = "searchModal";
 
 const ANIMAL_TYPES_ID = "animalTypes";
+const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
 
 window.addEventListener("load", async () => {
+  const searchModalForm = document.querySelector("#searchModal form");
+  searchModalForm.addEventListener("submit", searchAnimalType);
   const data = await getAnimalTypes();
-  displayTypeButtons(data.types);
+
+  // displayTypeButtons(data.types);
   const pagNav = document.querySelector("nav.pagination");
   pagNav.addEventListener("click", handlePaginationClick);
+  // See if user clicked cat, dog, or some other animal type before landing here.
+  let type = window.location.href.match(/type=(\w+)/);
+  if (type) {
+    const anchor = Array.from(
+      document.querySelectorAll(`#${ANIMAL_TYPES_ID} a`)
+    ).find((a) => a.getAttribute(ANIMAL_TYPE_ATTRIB).endsWith(type[1]));
+    if (anchor) anchor.click();
+  }
 });
+
+function searchAnimalType(e) {
+  e.preventDefault();
+  const animalType = e.target.elements.animalType.value;
+  const pageURI = `${ANIMALS_URI}?type=${animalType}`;
+  displayResults(pageURI);
+  createFilterForm(animalType);
+}
 
 /**
  * UI functions
  */
-function displayTypeButtons(types) {
-  const animalTypes = document.getElementById(ANIMAL_TYPES_ID);
-  types.forEach((type) => {
-    const col = createAnimalTypeButton(type);
-    animalTypes.append(col);
-  });
-}
-
-function createAnimalTypeButton(type) {
-  const { name, _links } = type;
-  const col = document.createElement("div");
-  col.classList = "column is-one-quarter";
-  col.innerHTML = `
-    <div class="card">
-      <a ${ANIMAL_TYPE_ATTRIB}="${_links.self.href}" 
-        ${ANIMAL_BREED_ATTRIB}="${_links.breeds.href}" 
-        class="button is-fullwidth is-white"
-      >
-        <div class="card-content">
-          <div class="content">${name}</div>
-        </div>
-      </a>
-    </div>
-    `;
-  const anchor = col.querySelector("a");
-  anchor.addEventListener("click", handleAnimalTypeClick);
-  return col;
-}
 
 function handleAnimalTypeClick(e) {
   const anchor = e.target.closest(`a[${ANIMAL_TYPE_ATTRIB}]`);
@@ -68,6 +61,8 @@ function handleAnimalTypeClick(e) {
     const animalType = typeURI.split("/").pop();
     const pageURI = `${ANIMALS_URI}?type=${animalType}`;
     displayResults(pageURI);
+    // createFilterForm
+    createFilterForm(animalType);
   }
 }
 
@@ -89,15 +84,14 @@ async function displayResults(uri) {
     searchResults.append(col);
   });
   createPagination(data.pagination);
-  searchResults.scrollIntoView();
+  // searchResults.scrollIntoView();
+  window.scrollTo(0, 0);
 }
 
 function createAnimalCard(animal) {
   const { name, age, gender, url, id, primary_photo_cropped } = animal;
   const col = document.createElement("col");
-  const imageSrc = primary_photo_cropped
-    ? `src="${primary_photo_cropped.small}"`
-    : "";
+  const imageSrc = primary_photo_cropped?.small || DEFAULT_ANIMAL_PHOTO;
   col.classList =
     "column is-one-quarter-tablet is-flex is-justify-content-center";
   col.innerHTML = `
@@ -106,7 +100,7 @@ function createAnimalCard(animal) {
       <div class="card-image">
         <img
           style="width: 100%; object-fit: cover; aspect-ratio: 1/1"
-          ${imageSrc}
+          src="${imageSrc}"
           alt="${name}"
         />
       </div>
@@ -117,6 +111,44 @@ function createAnimalCard(animal) {
   </div>
   `;
   return col;
+}
+
+async function createFilterForm(animalType) {
+  console.log(animalType);
+  const { breeds } = await getAnimalBreeds(animalType);
+  const { type } = await getSingleAnimalType(animalType);
+  const animalColors = document.getElementById("animalColor");
+  const animalCoats = document.getElementById("animalCoat");
+  const animalBreeds = document.getElementById("animalBreed");
+
+  clearChildren(animalColors);
+  clearChildren(animalCoats);
+  clearChildren(animalBreeds);
+
+  type.coats.forEach((coat) => {
+    animalCoats.append(createCheckbox(coat));
+  });
+  type.colors.forEach((color) => {
+    animalColors.append(createCheckbox(color));
+  });
+  breeds.flat().forEach(({ name }) => {
+    animalBreeds.append(createCheckbox(name));
+  });
+  console.log(breeds); // animal breeds
+  console.log(type); // coats, colors, genders
+}
+
+function createCheckbox(value) {
+  const checkboxField = document.createElement("div");
+  checkboxField.classList.add("field");
+  checkboxField.innerHTML = `
+    <div class="control">
+      <label class="checkbox">
+        <input type="checkbox" value=${value}/>
+          ${value}
+      </label>
+    </div>`;
+  return checkboxField;
 }
 
 function clearChildren(parent) {
