@@ -4,9 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/ico" href="./img/logo2transparent.png" />
   <link rel="stylesheet" href="./css/index.css" />
   <link rel="stylesheet" href="./css/index2.css" />
-  <title>PetShelf</title>
+  <link rel="stylesheet" href="./css/funFactCarousel.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css" />
+  <title>PetShelf | Home</title>
 </head>
 
 <body>
@@ -82,13 +85,13 @@
     <div class="container">
       <div class="columns cat-dog-tiles">
         <div class="column is-half cat-card">
-          <a href="./search.html">
+          <a href="./search.html?type=cat">
             <img style="width: 100%; object-fit: cover; aspect-ratio: 1/1;" src="img/cat3.png" alt="">
             <h3 class="overlay">Cat?</h3>
           </a>
         </div>
         <div class="column is-half dog-card">
-          <a href="./search.html">
+          <a href="./search.html?type=dog">
             <img style="width: 100%; object-fit: cover; aspect-ratio: 1/1;" src="img/dog.png" alt="">
             <h3 class="overlay">Dog?</h3>
           </a>
@@ -97,45 +100,57 @@
     </div>
     <!-- Cat and dog cards end -->
 
-    <div class="columns">
-      <div class="column">Auto</div>
-      <div class="column is-four-fifths funfact-housing">Funfacts
-        <div class="container">
-          <h1 class="text-center">Random Cat Facts</h1>
-          <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner text-center"></div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-              data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-              data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="column">Auto</div>
-    </div>
+    <h3>Looking for something else?</h3>
+    <a class="button is-medium is-fullwidth is-responsive is-link" href="./search.html">
+      Search Button
+    </a>
 
-    <button class="button is-medium is-fullwidth is-responsive is-link">
-      <span>Search Button</span>
-    </button>
+    <section>
+      <div id="slider">
+        <div class="card">
+            <div class="card-image">
+                <figure class="image is-5by3 is-covered">
+                    <img src="./img/husky-placeholder.jpeg" alt="" />
+                </figure>
+            </div>
+            <div class="card-content slider-text carousel-inner">
+            </div>
+        </div>
+        <div class="card ">
+            <div class="card-image">
+                <figure class="image is-5by3 is-covered">
+                    <img src="./img/color palette 2 - Copy.png" alt="" />
+                </figure>
+            </div>
+            <div class="card-content slider-text carousel-inner">
+            </div>
+        </div>
+        <div class="card ">
+            <div class="card-image">
+                <p class="image is-5by3 is-covered">
+                    <img src="./img/palette idea 5 - Copy.jpg" alt="" />
+                </p>
+            </div>
+            <div class="card-content slider-text carousel-inner">
+            </div>
+        </div>
+    </div>
+    </section>
+
+
 
   </section>
-  <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
-      integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
-      crossorigin="anonymous"
-    ></script>
-    <script src="./js/cat-facts.js"></script>
+
+  <script src="./js/funFactCarousel.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
+  <script>
+      bulmaCarousel.attach('#slider', {
+          slidesToScroll: 1,
+          slidesToShow: 1,
+          infinite: true,
+          autoplay: true,
+      });
+  </script>
 </body>
 <footer class="footer">
   <div class="content has-text-centered">
