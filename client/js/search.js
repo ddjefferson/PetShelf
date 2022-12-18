@@ -14,12 +14,22 @@ const PAG_NAV_PAGE_ATTRIBUTE = "data-page";
 const SEARCH_RESULTS_ID = "searchResults";
 
 const ANIMAL_TYPES_ID = "animalTypes";
+const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
 
 window.addEventListener("load", async () => {
   const data = await getAnimalTypes();
   displayTypeButtons(data.types);
   const pagNav = document.querySelector("nav.pagination");
   pagNav.addEventListener("click", handlePaginationClick);
+
+  // See if user clicked cat, dog, or some other animal type before landing here.
+  let type = window.location.href.match(/type=(\w+)/);
+  if (type) {
+    const anchor = Array.from(
+      document.querySelectorAll(`#${ANIMAL_TYPES_ID} a`)
+    ).find((a) => a.getAttribute(ANIMAL_TYPE_ATTRIB).endsWith(type[1]));
+    if (anchor) anchor.click();
+  }
 });
 
 /**
@@ -95,9 +105,7 @@ async function displayResults(uri) {
 function createAnimalCard(animal) {
   const { name, age, gender, url, id, primary_photo_cropped } = animal;
   const col = document.createElement("col");
-  const imageSrc = primary_photo_cropped
-    ? `src="${primary_photo_cropped.small}"`
-    : "";
+  const imageSrc = primary_photo_cropped?.small || DEFAULT_ANIMAL_PHOTO;
   col.classList =
     "column is-one-quarter-tablet is-flex is-justify-content-center";
   col.innerHTML = `
@@ -106,7 +114,7 @@ function createAnimalCard(animal) {
       <div class="card-image">
         <img
           style="width: 100%; object-fit: cover; aspect-ratio: 1/1"
-          ${imageSrc}
+          src="${imageSrc}"
           alt="${name}"
         />
       </div>
