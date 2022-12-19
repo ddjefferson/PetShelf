@@ -12,9 +12,12 @@ const PAG_NAV_PAGE_ATTRIBUTE = "data-page";
 
 const SEARCH_RESULTS_ID = "#searchResults";
 const SEARCH_MODAL_ID = "#searchModal";
-const ANIMAL_BREED_ID = "#animalBreed";
+const FILTER_MODAL_ID = "#filterModal";
 const ANIMAL_TYPES_ID = "#animalType";
 const BREED_FILTER_INPUT_ID = "#breedSearch";
+const ANIMAL_BREED_ID = "#animalBreed";
+const ANIMAL_COLOR_ID = "#animalColor";
+const ANIMAL_COAT_ID = "#animalCoat";
 
 const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
 
@@ -22,6 +25,9 @@ window.addEventListener("load", async () => {
   // Set up event listeners
   const searchModalForm = document.querySelector(`${SEARCH_MODAL_ID} form`);
   searchModalForm.addEventListener("submit", searchAnimalType);
+
+  const filterModalForm = document.querySelector(`${FILTER_MODAL_ID} form`);
+  filterModalForm.addEventListener("submit", filterAnimalType);
 
   const breedFilterInput = document.querySelector(BREED_FILTER_INPUT_ID);
   breedFilterInput.addEventListener("keydown", filterBreedNames);
@@ -47,6 +53,24 @@ function searchAnimalType(e) {
   populateFilterForm(animalType);
 }
 
+function filterAnimalType(e) {
+  e.preventDefault();
+  console.log(e.target.elements);
+  const checked = e.target.querySelectorAll(`input[type=checkbox]:checked`);
+  // Construct parameter strings.
+
+  const params = {};
+  checked.forEach((box) => {
+    let values = params[box.name] || [];
+    values.push(box.value);
+    params[box.name] = values;
+  });
+  Object.keys(params).forEach(
+    (name) => (params[name] = params[name].join(","))
+  );
+  console.log(params);
+}
+
 function filterBreedNames(e) {
   const breeds = Array.from(document.querySelectorAll("#animalBreed .field"));
   const query = e.target.value.toLowerCase();
@@ -70,6 +94,12 @@ function handlePaginationClick(e) {
   }
 }
 
+function toggleDisableAllButtons() {
+  document
+    .querySelectorAll("button, a")
+    .forEach((el) => el.classList.toggle("disabled-anchor"));
+}
+
 /**
  * UI functions
  */
@@ -80,8 +110,10 @@ async function displayAnimalResults(uri) {
   // Loading animation while getting results.
   const LOADING_CLASS = "loading";
   searchResults.classList.add(LOADING_CLASS);
+  toggleDisableAllButtons();
   const url = new URL(PETFINDER_URL + uri);
   const data = await getPetFinderData(url);
+  toggleDisableAllButtons();
   searchResults.classList.remove(LOADING_CLASS);
 
   clearChildren(searchResults);
@@ -138,33 +170,35 @@ function createAnimalCard(animal) {
 
 async function populateFilterForm(animalType) {
   const { breeds } = await getAnimalBreeds(animalType);
-  const { type } = await getSingleAnimalType(animalType);
-  const animalColors = document.querySelector("#animalColor");
-  const animalCoats = document.querySelector("#animalCoat");
-  const animalBreeds = document.querySelector("#animalBreed");
+  const {
+    type: { coats, colors },
+  } = await getSingleAnimalType(animalType);
+  const animalColors = document.querySelector(ANIMAL_COLOR_ID);
+  const animalCoats = document.querySelector(ANIMAL_COAT_ID);
+  const animalBreeds = document.querySelector(ANIMAL_BREED_ID);
 
   clearChildren(animalColors);
   clearChildren(animalCoats);
   clearChildren(animalBreeds);
 
-  type.coats.forEach((coat) => {
-    animalCoats.append(createCheckbox(coat));
+  coats.forEach((coat) => {
+    animalCoats.append(createCheckbox(coat, "coat"));
   });
-  type.colors.forEach((color) => {
-    animalColors.append(createCheckbox(color));
+  colors.forEach((color) => {
+    animalColors.append(createCheckbox(color, "color"));
   });
   breeds.flat().forEach(({ name }) => {
-    animalBreeds.append(createCheckbox(name));
+    animalBreeds.append(createCheckbox(name, "breed"));
   });
 }
 
-function createCheckbox(value) {
+function createCheckbox(value, inputName) {
   const checkboxField = document.createElement("div");
   checkboxField.classList.add("field");
   checkboxField.innerHTML = `
     <div class="control">
       <label class="checkbox">
-        <input type="checkbox" value=${value}/>
+        <input type="checkbox" value="${value}" name="${inputName}"/>
           ${value}
       </label>
     </div>`;

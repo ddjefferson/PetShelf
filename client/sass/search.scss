@@ -17,6 +17,10 @@ $light: $palette-2;
 
 $link: $primary;
 
+.disabled-anchor {
+    pointer-events: none;
+}
+
 
 // Update some of Bulma's component variables
 
