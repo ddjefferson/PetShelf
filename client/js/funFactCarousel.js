@@ -38,8 +38,7 @@ function addToUI(facts) {
   const carousel = document.querySelectorAll(".carousel-inner");
   carousel.forEach((slide) => {
     slide.innerHTML = `
-        <div class="is-size-5 box">
-            <h2 class="text-muted">Did you know?</h2>
+        <div class="is-size-5">
             <p class="text-white">${facts[i]}</p>
         </div>
     `;

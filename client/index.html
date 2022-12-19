@@ -12,17 +12,19 @@
   <title>PetShelf | Home</title>
 </head>
 
-<body>
+<body class="has-background-primary-light">
   <header>
 
     <!-- Top Nav Bar Starts -->
-    <nav class="navbar is-white has shadow">
+    <nav class="navbar has shadow">
       <div class="navbar-brand">
         <!-- TODO: insert link -->
-        <a class="navbar-item" href="./index.html">
-          <img src="img/logo2transparent.png" alt="PetShelf: The source for first time pet owners"
-            style="max-height: 125px" class="py-2 px-2" />
-        </a>
+        <figure class="image is-96x96">
+          <!-- <a class="navbar-item is-light" href="./index.html"> -->
+            <img src="img/logo2transparent.png" alt="PetShelf: The source for first time pet owners"
+              class="py-2 px-2" />
+          <!-- </a> -->
+        </figure>
         <div class="navbar-burger" data-target="navbarExampleTransparentExample">
           <span></span>
           <span></span>
@@ -32,14 +34,13 @@
 
       <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item" href="./newOwner.html"> New Pet Owner </a>
+          <a class="navbar-item" href="./petguide.html"> New Pet Owner </a>
           <div class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link" href="#"> FAQs </a>
             <div class="navbar-dropdown is-boxed">
-              <a class="navbar-item" href="./resources.html"> Resources </a>
+              <a class="navbar-item" href="./petguide.html"> Resources </a>
 
               <hr class="navbar-divider" />
-              <a class="navbar-item" href="#"> N/A </a>
               <a class="navbar-item is-active" href="#"> N/A </a>
             </div>
           </div>
@@ -49,14 +50,14 @@
           <div class="navbar-item">
             <div class="field is-grouped">
               <p class="control">
-                <a class="bd-heart-button button" data-social-network="#" data-social-action="#" data-social-target="#"
-                  target="#" href="./favorites.html">
+                <a class="bd-heart-button button is-light" data-social-network="#" data-social-action="#"
+                  data-social-target="#" target="#" href="./favorites.html">
                   <span><img src="img/heart.png" alt="heart-icon1" style="max-height: 50px" class="py-2 px-2" /></span>
                 </a>
               </p>
               <p class="control">
-                <a class="bd-heart-button button" data-social-network="#" data-social-action="#" data-social-target="#"
-                  target="#" href="./savedResources.html">
+                <a class="bd-heart-button button is-light" data-social-network="#" data-social-action="#"
+                  data-social-target="#" target="#" href="./savedResources.html">
                   <span><img src="img/book.png" alt="heart-icon1" style="max-height: 50px" class="py-2 px-2" /></span>
                 </a>
               </p>
@@ -66,21 +67,12 @@
       </div>
     </nav>
     <!-- Top Nav Bar Ends -->
-
-    <!-- Breadcrumbs -->
-    <div class="section pt-4 pb-0">
-      <nav class="breadcrumb has-arrow-separator">
-        <ul class="container is-size-6">
-          <li><a class="has-text-grey">PetShelf</a></li>
-          <li><a class="has-text-grey">New Pet Owner</a></li>
-          <li class="is-active"><a>Resources</a></li>
-      </nav>
-      </ul>
-    </div>
-    <!-- Breadcrumbs end -->
-
-    <!--Cat and dog cards begin  -->
   </header>
+
+  <h1>Welcome to Pet Shelf!</h1>
+  <h3>Can we help you find a:</h3>
+
+  <!--Cat and dog cards begin  -->
   <section class="section">
     <div class="container">
       <div class="columns cat-dog-tiles">
@@ -101,55 +93,54 @@
     <!-- Cat and dog cards end -->
 
     <h3>Looking for something else?</h3>
-    <a class="button is-medium is-fullwidth is-responsive is-link" href="./search.html">
+    <a class="button is-medium is-fullwidth is-responsive is-link block" href="./search.html">
       Search Button
     </a>
 
+    <!-- Fun fact carousel start -->
     <section>
-      <div id="slider">
+      <h2 class="text-muted">Did you know?</h2>
+      <div class="box" id="slider">
         <div class="card">
-            <div class="card-image">
-                <figure class="image is-5by3 is-covered">
-                    <img src="./img/husky-placeholder.jpeg" alt="" />
-                </figure>
-            </div>
-            <div class="card-content slider-text carousel-inner">
-            </div>
+          <div class="card-image">
+            <figure class="image is-128x128 is-covered">
+              <img src="./img/husky-placeholder.jpeg" alt="" />
+            </figure>
+          </div>
+          <div class="card-content slider-text carousel-inner">
+          </div>
         </div>
-        <div class="card ">
-            <div class="card-image">
-                <figure class="image is-5by3 is-covered">
-                    <img src="./img/color palette 2 - Copy.png" alt="" />
-                </figure>
-            </div>
-            <div class="card-content slider-text carousel-inner">
-            </div>
+        <div class="card">
+          <div class="card-image">
+            <figure class="image is-128x128 is-covered">
+              <img src="./img/color palette 2 - Copy.png" alt="" />
+            </figure>
+          </div>
+          <div class="card-content slider-text carousel-inner">
+          </div>
         </div>
-        <div class="card ">
-            <div class="card-image">
-                <p class="image is-5by3 is-covered">
-                    <img src="./img/palette idea 5 - Copy.jpg" alt="" />
-                </p>
-            </div>
-            <div class="card-content slider-text carousel-inner">
-            </div>
+        <div class="card">
+          <div class="card-image">
+            <figure class="image is-128x128 is-covered">
+              <img src="./img/palette idea 5 - Copy.jpg" alt="" />
+            </figure>
+          </div>
+          <div class="card-content slider-text carousel-inner">
+          </div>
         </div>
-    </div>
+      </div>
     </section>
-
-
-
   </section>
 
   <script src="./js/funFactCarousel.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
   <script>
-      bulmaCarousel.attach('#slider', {
-          slidesToScroll: 1,
-          slidesToShow: 1,
-          infinite: true,
-          autoplay: true,
-      });
+    bulmaCarousel.attach('#slider', {
+      slidesToScroll: 1,
+      slidesToShow: 1,
+      infinite: true,
+      autoplay: true,
+    });
   </script>
 </body>
 <footer class="footer">
