@@ -21,6 +21,8 @@ const CLOSE_SELECT_MODAL_BTN = "#closeSelectTypeBtn";
 const CLOSE_FILTER_MODAL_BTN = "#closeFilterBtn";
 const FILTER_MODAL_OPEN_BTN_ID = "#filterModalOpenBtn";
 const FILTER_TAGS_ID = "#filterTags";
+const LOCATION_BTN = "#locationBtn";
+const DISTANCE_FIELD_ID = "#distanceField";
 
 const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
 
@@ -30,7 +32,7 @@ window.addEventListener("load", async () => {
   searchModalForm.addEventListener("submit", searchAnimalType);
 
   const filterModalForm = document.querySelector(`${FILTER_MODAL_ID} form`);
-  filterModalForm.addEventListener("submit", filterAnimalType);
+  filterModalForm.addEventListener("submit", handleApplyFilters);
 
   const breedFilterInput = document.querySelector(BREED_FILTER_INPUT_ID);
   breedFilterInput.addEventListener("keydown", filterBreedNames);
@@ -49,6 +51,9 @@ window.addEventListener("load", async () => {
   const pagNav = document.querySelector("nav.pagination");
   pagNav.addEventListener("click", handlePaginationClick);
 
+  const locationBtn = document.querySelector(LOCATION_BTN);
+  locationBtn.addEventListener("click", requestUserLocation);
+
   // See if user clicked cat, dog, or some other valid animal type before landing here.
   let type = window.location.href.match(/type=(\w+)/);
   if (!type) return;
@@ -60,37 +65,70 @@ window.addEventListener("load", async () => {
   }
 });
 
+async function requestUserLocation(e) {
+  if (!navigator.geolocation) {
+    handleNoLocation();
+    return;
+  } else {
+    navigator.geolocation.getCurrentPosition(useLocation, handleNoLocation);
+  }
+}
+
+function handleNoLocation() {
+  alert("Unable to get your location");
+  document.querySelector(DISTANCE_FIELD_ID).classList.add("is-hidden");
+}
+
+function useLocation(position) {
+  alert("You've granted permission to use your location");
+  document.querySelector(DISTANCE_FIELD_ID).classList.remove("is-hidden");
+}
+
+async function hasLocationBeenGranted() {
+  const result = await navigator.permissions.query({ name: "geolocation" });
+  return result.state === "granted";
+}
+
 // Event listeners
 async function searchAnimalType(e) {
   e.preventDefault();
+  // Get form information.
   const animalType = e.target.elements.animalType.value;
-  const pageURI = `${ANIMALS_URI}?type=${animalType}`;
-  await displayAnimals(pageURI);
+
+  // Build the URI and request the data.
+  const params = new URLSearchParams(`type=${animalType}`);
+  await locateUserThenDisplayAnimals(params);
+
+  // Enable filter options.
   populateFilterForm(animalType);
   document
     .querySelector(FILTER_MODAL_OPEN_BTN_ID)
     .classList.remove("is-hidden");
 }
 
-async function filterAnimalType(e) {
+async function handleApplyFilters(e) {
   e.preventDefault();
+
+  // Get checked filter boxes.
   const checked = e.target.querySelectorAll(`input[type=checkbox]:checked`);
 
-  // Construct parameter strings.
+  // Create query parameters.
   let params = { type: getCurrentResultParams().get("type") };
   checked.forEach((box) => {
     let values = params[box.name] || [];
     values.push(box.value);
     params[box.name] = values;
   });
-
   params = new URLSearchParams(Object.entries(params));
-  await displayAnimals(`${ANIMALS_URI}?${params}`);
-  // Show parameter tags
-  updateParameterTags(params);
+
+  // Build URI from params and request data.
+  await locateUserThenDisplayAnimals(params);
+
+  // Show filter tags.
+  updateFilterTags(params);
 }
 
-function updateParameterTags(params) {
+function updateFilterTags(params) {
   params.delete("type");
   const filterTags = document.querySelector(FILTER_TAGS_ID);
 
@@ -144,6 +182,10 @@ function resetSearchModalForm(e) {
   const type = getCurrentResultParams().get("type");
   const searchModalForm = document.querySelector(`${SEARCH_MODAL_ID} form`);
   searchModalForm.elements[ANIMAL_TYPES_ID.slice(1)].value = type;
+  searchModalForm.elements[DISTANCE_FIELD_ID.slice(1)].value = "";
+  if (!hasLocationBeenGranted()) {
+    document.querySelector(DISTANCE_FIELD_ID).classList.add("is-hidden");
+  }
 }
 
 function resetFilterModalForm(e) {
@@ -159,12 +201,10 @@ function resetFilterModalForm(e) {
 
 async function handlePaginationClick(e) {
   const page = e.target.getAttribute(PAG_NAV_PAGE_ATTRIBUTE);
-
   if (page) {
-    const pagNav = document.querySelector(".pagination");
-    let uri = pagNav.getAttribute(PAG_NAV_URI_ATTRIB);
-    uri = uri.replace(/page=[\d]+/, `page=${page}`);
-    await displayAnimals(uri);
+    const params = getCurrentResultParams();
+    params.set("page", page);
+    await locateUserThenDisplayAnimals(params);
   }
 }
 
@@ -183,31 +223,51 @@ function getCurrentResultParams() {
 /**
  * UI functions
  */
-
-async function displayAnimals(uri) {
+async function displayAnimals(params) {
   const searchResults = document.querySelector(SEARCH_RESULTS_ID);
-  const params = uri.slice(uri.lastIndexOf("?") + 1);
-  searchResults.setAttribute(DATA_RESULTS_PARAMS_ATTRIB, params);
+
+  // Save relevant URI params on container.
+  searchResults.setAttribute(DATA_RESULTS_PARAMS_ATTRIB, params.toString());
 
   // Loading animation while getting results.
   const LOADING_CLASS = "loading";
   searchResults.classList.add(LOADING_CLASS);
   toggleDisableAllButtons();
-  const url = new URL(PETFINDER_URL + uri);
-  const data = await getPetFinderData(url);
+  const { animals, pagination } = await getAnimals(params.toString());
   toggleDisableAllButtons();
   searchResults.classList.remove(LOADING_CLASS);
 
   clearChildren(searchResults);
 
   // Display new results.
-  data.animals.forEach((animal) => {
+  animals.forEach((animal) => {
     const col = createAnimalCard(animal);
     searchResults.append(col);
   });
-  createPagination(data.pagination);
+  createPagination(pagination);
   // searchResults.scrollIntoView();
   window.scrollTo(0, 0);
+}
+
+function locateUserThenDisplayAnimals(params) {
+  // See if location is available.
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const select = document.querySelector(`${DISTANCE_FIELD_ID} select`);
+      if (select.value) {
+        // Using user's location.
+        params.set("distance", select.value);
+        const { latitude, longitude } = position.coords;
+        params.set("location", `${latitude},${longitude}`);
+      }
+      displayAnimals(params);
+    },
+    () => {
+      console.log(params.get("distance"));
+      // Not using user's location.
+      displayAnimals(params);
+    }
+  );
 }
 
 function createAnimalCard(animal) {
@@ -242,7 +302,8 @@ function createAnimalCard(animal) {
         <p>
           <span class="${genderColor}"><i class="fa-solid ${genderIconClass} m-1"></i></span>${gender}
           <span class="has-text-success"> <i class="fa-solid fa-seedling"></i> ${age}
-          </p>
+        </p>
+        ${animal.distance ? `<p>${animal.distance.toFixed(1)} miles</p>` : ""}
       </div>
     </div>
   </div>

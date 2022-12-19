@@ -183,17 +183,36 @@
             </div>
           </fieldset>
           <div class="field">
-            <p class="control has-icons-left">
-              <input
-                class="input"
+            <div class="control is-flex is-justify-content-center">
+              <button
+                id="locationBtn"
+                type="button"
+                class="button is-primary has-background-primary-dark"
                 type="text"
-                placeholder="City, State, or Zip"
-              />
-              <span class="icon is-small is-left">
-                <i class="fa-solid fa-location-dot"></i>
-              </span>
-            </p>
+              >
+                <i class="fa-solid fa-location-dot m-1"></i>
+                Use my Location
+              </button>
+            </div>
           </div>
+          <fieldset
+            id="distanceField"
+            class="box is-flex is-justify-content-center is-hidden"
+          >
+            <legend class="has-text-centered has-text-weight-bold">
+              Distance
+            </legend>
+            <div class="select">
+              <select name="distanceField">
+                <option value="">Anywhere</option>
+                <option value="10">10 miles</option>
+                <option value="25">25 miles</option>
+                <option value="50">50 miles</option>
+                <option value="100">100 miles</option>
+              </select>
+            </div>
+          </fieldset>
+
           <div class="field is-grouped is-flex is-justify-content-center">
             <div class="control">
               <button
