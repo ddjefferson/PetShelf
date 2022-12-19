@@ -7,73 +7,197 @@ const PETFINDER_URL = "https://api.petfinder.com";
 const ANIMALS_URI = "/v2/animals";
 const ANIMAL_TYPES_URI = "/v2/types";
 
-const ANIMAL_TYPE_ATTRIB = "data-animal-type";
-const ANIMAL_BREED_ATTRIB = "data-animal-breed";
 const PAG_NAV_URI_ATTRIB = "page-navigation-uri";
 const PAG_NAV_PAGE_ATTRIBUTE = "data-page";
-const SEARCH_RESULTS_ID = "searchResults";
-const SEARCH_MODAL_ID = "searchModal";
+const DATA_RESULTS_PARAMS_ATTRIB = "data-results-params";
 
-const ANIMAL_TYPES_ID = "animalTypes";
+const SEARCH_RESULTS_ID = "#searchResults";
+const SEARCH_MODAL_ID = "#searchModal";
+const FILTER_MODAL_ID = "#filterModal";
+const ANIMAL_TYPES_ID = "#animalType";
+const BREED_FILTER_INPUT_ID = "#breedSearch";
+const ANIMAL_BREED_ID = "#animalBreed";
+const ANIMAL_COLOR_ID = "#animalColor";
+const ANIMAL_COAT_ID = "#animalCoat";
+const CLOSE_SELECT_MODAL_BTN = "#closeSelectTypeBtn";
+const CLOSE_FILTER_MODAL_BTN = "#closeFilterBtn";
+const FILTER_MODAL_OPEN_BTN_ID = "#filterModalOpenBtn";
+const FILTER_TAGS_ID = "#filterTags";
+
 const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
 
 window.addEventListener("load", async () => {
-  const searchModalForm = document.querySelector("#searchModal form");
+  // Set up event listeners
+  const searchModalForm = document.querySelector(`${SEARCH_MODAL_ID} form`);
   searchModalForm.addEventListener("submit", searchAnimalType);
-  const data = await getAnimalTypes();
 
-  // displayTypeButtons(data.types);
+  const filterModalForm = document.querySelector(`${FILTER_MODAL_ID} form`);
+  filterModalForm.addEventListener("submit", filterAnimalType);
+
+  const breedFilterInput = document.querySelector(BREED_FILTER_INPUT_ID);
+  breedFilterInput.addEventListener("keydown", filterBreedNames);
+
+  const closeSelectModalBtn = document.querySelector(CLOSE_SELECT_MODAL_BTN);
+  closeSelectModalBtn.addEventListener("click", resetSearchModalForm);
+
+  const closeFilterModalBtn = document.querySelector(CLOSE_FILTER_MODAL_BTN);
+  closeFilterModalBtn.addEventListener("click", resetFilterModalForm);
+
+  const filterModalOpenBtn = document.querySelector(FILTER_MODAL_OPEN_BTN_ID);
+  filterModalOpenBtn.addEventListener("click", (e) =>
+    filterModalForm.scrollIntoView()
+  );
+
   const pagNav = document.querySelector("nav.pagination");
   pagNav.addEventListener("click", handlePaginationClick);
+
   // See if user clicked cat, dog, or some other animal type before landing here.
   let type = window.location.href.match(/type=(\w+)/);
   if (type) {
-    const anchor = Array.from(
-      document.querySelectorAll(`#${ANIMAL_TYPES_ID} a`)
-    ).find((a) => a.getAttribute(ANIMAL_TYPE_ATTRIB).endsWith(type[1]));
-    if (anchor) anchor.click();
+    searchModalForm.elements[ANIMAL_TYPES_ID.slice(1)].value = type;
+    searchModalForm.requestSubmit();
   }
 });
 
-function searchAnimalType(e) {
+// Event listeners
+async function searchAnimalType(e) {
   e.preventDefault();
   const animalType = e.target.elements.animalType.value;
   const pageURI = `${ANIMALS_URI}?type=${animalType}`;
-  displayResults(pageURI);
-  createFilterForm(animalType);
+  await displayAnimals(pageURI);
+  populateFilterForm(animalType);
+  document
+    .querySelector(FILTER_MODAL_OPEN_BTN_ID)
+    .classList.remove("is-hidden");
+}
+
+async function filterAnimalType(e) {
+  e.preventDefault();
+  const checked = e.target.querySelectorAll(`input[type=checkbox]:checked`);
+
+  // Construct parameter strings.
+  let params = { type: getCurrentResultParams().get("type") };
+  checked.forEach((box) => {
+    let values = params[box.name] || [];
+    values.push(box.value);
+    params[box.name] = values;
+  });
+
+  params = new URLSearchParams(Object.entries(params));
+  await displayAnimals(`${ANIMALS_URI}?${params}`);
+  // Show parameter tags
+  updateParameterTags(params);
+}
+
+function updateParameterTags(params) {
+  params.delete("type");
+  const filterTags = document.querySelector(FILTER_TAGS_ID);
+
+  clearChildren(filterTags);
+  console.log(Array.from(params.values()));
+  for (const [param, values] of params) {
+    values.split(",").forEach((p) => {
+      const tag = document.createElement("div");
+      tag.classList = "control";
+      tag.innerHTML = `
+      <div class="control">
+        <div class="tags has-addons">
+          <a class="tag is-link">${isNaN(p) ? p : param}</a>
+          <a class="tag is-delete"></a>
+        </div>
+      </div>`;
+      tag.addEventListener("click", removeFilterTag);
+      filterTags.append(tag);
+    });
+  }
+}
+
+async function removeFilterTag(e) {
+  const tag = e.target.closest(".control");
+  console.log(tag);
+  const param = tag.querySelector(".tag.is-link").textContent;
+  console.log(param);
+  const filterForm = document.querySelector(`${FILTER_MODAL_ID} form`);
+  const boxes = Array.from(
+    filterForm.querySelectorAll(`input[type=checkbox]:checked`)
+  );
+  const boxToUncheck = boxes.find((b) => b.value === param || b.name === param);
+  boxToUncheck.checked = false;
+  tag.remove();
+  filterForm.requestSubmit();
+}
+
+function filterBreedNames(e) {
+  const breeds = Array.from(
+    document.querySelectorAll(`${ANIMAL_BREED_ID} .field`)
+  );
+  const query = e.target.value.toLowerCase();
+  breeds.forEach((breedField) => {
+    if (breedField.querySelector("input").value.toLowerCase().includes(query)) {
+      breedField.classList.remove("is-hidden");
+    } else {
+      breedField.classList.add("is-hidden");
+    }
+  });
+}
+
+// Ensure modal form shows the correctly selected values when it's re-opened.
+function resetSearchModalForm(e) {
+  const type = getCurrentResultParams().get("type");
+  const searchModalForm = document.querySelector(`${SEARCH_MODAL_ID} form`);
+  searchModalForm.elements[ANIMAL_TYPES_ID.slice(1)].value = type;
+}
+
+function resetFilterModalForm(e) {
+  const params = new URLSearchParams(getCurrentResultParams());
+  const inputs = document.querySelectorAll(
+    `${FILTER_MODAL_ID} input[type=checkbox]`
+  );
+  inputs.forEach((b) => {
+    b.checked = params.has(b.name) && params.get(b.name).includes(b.value);
+  });
+  document.querySelector(`${FILTER_MODAL_ID} form`).scrollIntoView();
+}
+
+async function handlePaginationClick(e) {
+  const page = e.target.getAttribute(PAG_NAV_PAGE_ATTRIBUTE);
+
+  if (page) {
+    const pagNav = document.querySelector(".pagination");
+    let uri = pagNav.getAttribute(PAG_NAV_URI_ATTRIB);
+    uri = uri.replace(/page=[\d]+/, `page=${page}`);
+    await displayAnimals(uri);
+  }
+}
+
+function toggleDisableAllButtons() {
+  document
+    .querySelectorAll("button, a")
+    .forEach((el) => el.classList.toggle("disabled-anchor"));
+}
+
+function getCurrentResultParams() {
+  const searchResults = document.querySelector(SEARCH_RESULTS_ID);
+  const oldParams = searchResults.getAttribute(DATA_RESULTS_PARAMS_ATTRIB);
+  return new URLSearchParams(oldParams);
 }
 
 /**
  * UI functions
  */
 
-function handleAnimalTypeClick(e) {
-  const anchor = e.target.closest(`a[${ANIMAL_TYPE_ATTRIB}]`);
-  if (!anchor.classList.contains("is-primary")) {
-    // Make this anchor the only one with class primary.
-    document.querySelectorAll(`#${ANIMAL_TYPES_ID} a`).forEach((a) => {
-      a.classList.remove("is-primary");
-      a.classList.add("is-white");
-    });
-    anchor.classList.add("is-primary");
-    // Display the results associated with this button.
-    const typeURI = anchor.getAttribute(ANIMAL_TYPE_ATTRIB);
-    const animalType = typeURI.split("/").pop();
-    const pageURI = `${ANIMALS_URI}?type=${animalType}`;
-    displayResults(pageURI);
-    // createFilterForm
-    createFilterForm(animalType);
-  }
-}
-
-async function displayResults(uri) {
-  const searchResults = document.getElementById(SEARCH_RESULTS_ID);
+async function displayAnimals(uri) {
+  const searchResults = document.querySelector(SEARCH_RESULTS_ID);
+  const params = uri.slice(uri.lastIndexOf("?") + 1);
+  searchResults.setAttribute(DATA_RESULTS_PARAMS_ATTRIB, params);
 
   // Loading animation while getting results.
   const LOADING_CLASS = "loading";
   searchResults.classList.add(LOADING_CLASS);
+  toggleDisableAllButtons();
   const url = new URL(PETFINDER_URL + uri);
   const data = await getPetFinderData(url);
+  toggleDisableAllButtons();
   searchResults.classList.remove(LOADING_CLASS);
 
   clearChildren(searchResults);
@@ -90,12 +214,21 @@ async function displayResults(uri) {
 
 function createAnimalCard(animal) {
   const { name, age, gender, url, id, primary_photo_cropped } = animal;
+  let genderIconClass = "fa-ganderless";
+  let genderColor = "has-text-black";
+  if (gender === "Male") {
+    genderIconClass = "fa-mars";
+    genderColor = "has-text-info";
+  } else if (gender === "Female") {
+    genderIconClass = "fa-venus";
+    genderColor = "has-text-danger";
+  }
   const col = document.createElement("col");
   const imageSrc = primary_photo_cropped?.small || DEFAULT_ANIMAL_PHOTO;
   col.classList =
     "column is-one-quarter-tablet is-flex is-justify-content-center";
   col.innerHTML = `
-  <div class="card is-flex-grow-1">
+  <div class="card is-flex-grow-1 is-flex is-flex-direction-column">
     <a href="${url}" target="_blank" rel="noopener">
       <div class="card-image">
         <img
@@ -105,65 +238,55 @@ function createAnimalCard(animal) {
         />
       </div>
     </a>
-    <div class="card-content">
-      <div class="content">${name} ${gender} ${age}</div>
+    <div class="card-content has-text-centered p-3 is-flex is-flex-grow-1">
+      <div class="content is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
+        <p class="has-text-primary is-size-5 has-text-weight-bold m-1">${name}</p>
+        <p>
+          <span class="${genderColor}"><i class="fa-solid ${genderIconClass} m-1"></i></span>${gender}
+          <span class="has-text-success"> <i class="fa-solid fa-seedling"></i> ${age}
+          </p>
+      </div>
     </div>
   </div>
   `;
   return col;
 }
 
-async function createFilterForm(animalType) {
-  console.log(animalType);
+async function populateFilterForm(animalType) {
   const { breeds } = await getAnimalBreeds(animalType);
-  const { type } = await getSingleAnimalType(animalType);
-  const animalColors = document.getElementById("animalColor");
-  const animalCoats = document.getElementById("animalCoat");
-  const animalBreeds = document.getElementById("animalBreed");
+  const {
+    type: { coats, colors },
+  } = await getSingleAnimalType(animalType);
+  const animalColors = document.querySelector(ANIMAL_COLOR_ID);
+  const animalCoats = document.querySelector(ANIMAL_COAT_ID);
+  const animalBreeds = document.querySelector(ANIMAL_BREED_ID);
 
   clearChildren(animalColors);
   clearChildren(animalCoats);
   clearChildren(animalBreeds);
 
-  type.coats.forEach((coat) => {
-    animalCoats.append(createCheckbox(coat));
+  coats.forEach((coat) => {
+    animalCoats.append(createCheckbox(coat, "coat"));
   });
-  type.colors.forEach((color) => {
-    animalColors.append(createCheckbox(color));
+  colors.forEach((color) => {
+    animalColors.append(createCheckbox(color, "color"));
   });
   breeds.flat().forEach(({ name }) => {
-    animalBreeds.append(createCheckbox(name));
+    animalBreeds.append(createCheckbox(name, "breed"));
   });
-  console.log(breeds); // animal breeds
-  console.log(type); // coats, colors, genders
 }
 
-function createCheckbox(value) {
+function createCheckbox(value, inputName) {
   const checkboxField = document.createElement("div");
   checkboxField.classList.add("field");
   checkboxField.innerHTML = `
     <div class="control">
       <label class="checkbox">
-        <input type="checkbox" value=${value}/>
+        <input type="checkbox" value="${value}" name="${inputName}"/>
           ${value}
       </label>
     </div>`;
   return checkboxField;
-}
-
-function clearChildren(parent) {
-  while (parent.firstElementChild) parent.firstElementChild.remove();
-}
-
-function handlePaginationClick(e) {
-  const page = e.target.getAttribute(PAG_NAV_PAGE_ATTRIBUTE);
-
-  if (page) {
-    const pagNav = document.querySelector(".pagination");
-    let uri = pagNav.getAttribute(PAG_NAV_URI_ATTRIB);
-    uri = uri.replace(/page=[\d]+/, `page=${page}`);
-    displayResults(uri);
-  }
 }
 
 function createPagination(pagination) {
@@ -171,8 +294,10 @@ function createPagination(pagination) {
   const ul = pagNav.querySelector(".pagination-list");
   clearChildren(ul);
   if (pagination.total_pages <= 1) {
+    pagNav.classList.add("is-hidden");
     return;
   }
+  pagNav.classList.remove("is-hidden");
 
   // Destructure pagination data.
   const { current_page: current, total_pages: total, _links } = pagination;
@@ -189,13 +314,20 @@ function createPagination(pagination) {
 
   // Add buttons to UI.
   nums.forEach((n) => {
-    ul.innerHTML += `<li><a class="pagination-link" aria-label="Goto page ${n}" ${PAG_NAV_PAGE_ATTRIBUTE}=${n}>${n}</a></li>`;
+    ul.innerHTML += `
+    <li>
+      <a class="pagination-link has-background-light has-text-white" 
+        aria-label="Goto page ${n}" ${PAG_NAV_PAGE_ATTRIBUTE}=${n}>
+         ${n}
+      </a>
+    </li>`;
   });
 
   // Style button for current page.
   const currentIndex = nums.indexOf(current);
   const currentLink = ul.children[currentIndex].querySelector("a");
   currentLink.classList.add("is-current");
+  currentLink.classList.toggle("has-background-light");
   currentLink.setAttribute("aria-current", "page");
 
   // Decide if to display ellipses next to first and last page.
@@ -225,6 +357,10 @@ function createPagination(pagination) {
   } else {
     nextBtn.classList.add("is-hidden");
   }
+}
+
+function clearChildren(parent) {
+  while (parent.firstElementChild) parent.firstElementChild.remove();
 }
 
 /**

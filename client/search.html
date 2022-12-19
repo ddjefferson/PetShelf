@@ -17,9 +17,9 @@
     <title>Pet Shelf | Search</title>
   </head>
 
-  <body>
+  <body class="has-background-primary-light">
     <!-- Top Nav Bar Starts -->
-    <nav class="navbar is-white has shadow">
+    <nav class="navbar is-white has-shadow">
       <div class="navbar-brand">
         <!-- TODO: insert link -->
         <a class="navbar-item" href="./index.html">
@@ -101,15 +101,11 @@
     </nav>
     <div id="searchModal" class="modal">
       <div class="modal-background"></div>
-      <div class="modal-content has-background-white p-2">
+      <div class="modal-content has-background-light">
         <form class="p-2 has-text-primary has-background-white p-2">
           <h1 class="title has-text-centered has-text-primary">Search</h1>
 
-          <fieldset
-            id="animalTypes"
-            required
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset id="animalType" required class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Pet Type
             </legend>
@@ -200,13 +196,20 @@
           </div>
           <div class="field is-grouped is-flex is-justify-content-center">
             <div class="control">
-              <button type="submit" class="button is-primary modal-close-btn">
+              <button
+                type="submit"
+                class="button is-primary has-background-primary modal-close-btn"
+              >
                 <i class="fa-solid fa-bone"></i>
                 <span class="m-1">Fetch</span>
               </button>
             </div>
             <div class="control">
-              <button type="button" class="button modal-close-btn">
+              <button
+                id="closeSelectTypeBtn"
+                type="button"
+                class="button modal-close-btn"
+              >
                 <i class="fa-solid fa-circle-xmark"></i>
                 <span class="m-1">Close</span>
               </button>
@@ -218,47 +221,45 @@
     </div>
     <div id="filterModal" class="modal">
       <div class="modal-background"></div>
-      <div class="modal-content">
-        <form id="filterForm" class="has-background-white p-4">
+      <div class="modal-content has-background-light">
+        <form id="filterForm" class="p-4 has-background-white">
           <h1 class="title has-text-centered has-text-primary">Filters</h1>
-          <fieldset
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Breed
             </legend>
             <div class="field">
               <div class="control">
-                <input class="input" type="text" placeholder="Search Breed" />
+                <input
+                  id="breedSearch"
+                  class="input"
+                  type="text"
+                  placeholder="Search Breed"
+                />
               </div>
             </div>
-            <div id="animalBreed"></div>
+            <div
+              id="animalBreed"
+              class="has-background-white-ter p-4"
+              style="max-height: 200px; overflow-y: scroll"
+            ></div>
           </fieldset>
-          <fieldset
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Color
             </legend>
             <div id="animalColor"></div>
           </fieldset>
-          <fieldset
-            id="animalCoat"
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
-            <legend class="has-text-centered has-text-weight-bold">
-              Color
-            </legend>
+          <fieldset class="box">
+            <legend class="has-text-centered has-text-weight-bold">Coat</legend>
+            <div id="animalCoat"></div>
           </fieldset>
-          <fieldset
-            id="animalSize"
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset id="animalSize" class="box">
             <legend class="has-text-centered has-text-weight-bold">Size</legend>
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="size" value="Small" />
                   Small
                 </label>
               </div>
@@ -266,7 +267,7 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="size" value="Medium" />
                   Medium
                 </label>
               </div>
@@ -274,7 +275,7 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="size" value="Large" />
                   Large
                 </label>
               </div>
@@ -282,23 +283,20 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="size" value="Extra Large" />
                   Extra Large
                 </label>
               </div>
             </div>
           </fieldset>
-          <fieldset
-            id="animalGenders"
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset id="animalGenders" class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Gender
             </legend>
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" vale="Male" />
+                  <input type="checkbox" value="Male" name="gender" />
                   Male
                 </label>
               </div>
@@ -306,7 +304,7 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" vale="Female" />
+                  <input type="checkbox" value="Female" name="gender" />
                   Female
                 </label>
               </div>
@@ -314,21 +312,18 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" value="Unknown" />
+                  <input type="checkbox" value="Unknown" name="gender" />
                   Unknown
                 </label>
               </div>
             </div>
           </fieldset>
-          <fieldset
-            id="animalAge"
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset id="animalAge" class="box">
             <legend class="has-text-centered has-text-weight-bold">Age</legend>
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="age" value="Baby" />
                   Baby
                 </label>
               </div>
@@ -336,7 +331,7 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="age" value="Young" />
                   Young
                 </label>
               </div>
@@ -344,7 +339,7 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="age" value="Adult" />
                   Adult
                 </label>
               </div>
@@ -352,22 +347,20 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="age" value="Senior" />
                   Senior
                 </label>
               </div>
             </div>
           </fieldset>
-          <fieldset
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Good With
             </legend>
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="good_with_children" value="1" />
                   Kids
                 </label>
               </div>
@@ -375,7 +368,7 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="good_with_dogs" value="1" />
                   Dogs
                 </label>
               </div>
@@ -383,7 +376,7 @@
             <div class="field">
               <div class="control">
                 <label class="checkbox">
-                  <input type="checkbox" />
+                  <input type="checkbox" name="good_with_cats" value="1" />
                   Cats
                 </label>
               </div>
@@ -391,13 +384,20 @@
           </fieldset>
           <div class="field is-grouped is-flex is-justify-content-center">
             <div class="control">
-              <button class="button is-primary">
+              <button
+                type="submit"
+                class="button modal-close-btn is-primary has-background-primary-dark"
+              >
                 <i class="fa-solid fa-filter"></i>
                 <span class="m-1">Apply Filters</span>
               </button>
             </div>
             <div class="control">
-              <button class="button">
+              <button
+                id="closeFilterBtn"
+                type="button"
+                class="button modal-close-btn"
+              >
                 <i class="fa-solid fa-circle-xmark"></i>
                 <span class="m-1">Close</span>
               </button>
@@ -409,32 +409,40 @@
     </div>
 
     <!-- Types of animals that can be searched. -->
-    <div class="container my-2">
+    <div class="container my-2 p-3">
       <div class="is-flex is-justify-content-center">
         <button
-          class="button is-primary js-modal-trigger m-2"
+          id="selectTypeBtn"
+          class="button has-background-primary has-text-white js-modal-trigger m-2"
           data-target="searchModal"
         >
           <i class="fa-solid fa-magnifying-glass"></i>
           <span class="m-1">Select Pet</span>
         </button>
         <button
-          class="button is-primary js-modal-trigger m-2"
+          id="filterModalOpenBtn"
+          class="button is-primary has-background-primary-dark js-modal-trigger m-2 is-hidden"
           data-target="filterModal"
         >
           <i class="fa-solid fa-filter"></i>
           <span class="m-1">Filters</span>
         </button>
       </div>
-
+      <div id="filterTags" class="field is-grouped is-grouped-multiline"></div>
       <div id="searchResults" class="columns is-multiline my-2"></div>
       <nav
         class="pagination is-centered"
         role="navigation"
         aria-label="pagination"
       >
-        <a class="pagination-previous is-hidden">Previous</a>
-        <a class="pagination-next is-hidden">Next page</a>
+        <a
+          class="pagination-previous is-hidden has-text-white has-background-primary"
+          >Previous</a
+        >
+        <a
+          class="pagination-next is-hidden has-text-white has-background-primary"
+          >Next page</a
+        >
         <ul class="pagination-list"></ul>
       </nav>
     </div>
