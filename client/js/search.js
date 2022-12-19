@@ -98,12 +98,21 @@ async function displayAnimalResults(uri) {
 
 function createAnimalCard(animal) {
   const { name, age, gender, url, id, primary_photo_cropped } = animal;
+  let genderIconClass = "fa-ganderless";
+  let genderColor = "has-text-black";
+  if (gender === "Male") {
+    genderIconClass = "fa-mars";
+    genderColor = "has-text-info";
+  } else if (gender === "Female") {
+    genderIconClass = "fa-venus";
+    genderColor = "has-text-danger";
+  }
   const col = document.createElement("col");
   const imageSrc = primary_photo_cropped?.small || DEFAULT_ANIMAL_PHOTO;
   col.classList =
     "column is-one-quarter-tablet is-flex is-justify-content-center";
   col.innerHTML = `
-  <div class="card is-flex-grow-1">
+  <div class="card is-flex-grow-1 is-flex is-flex-direction-column">
     <a href="${url}" target="_blank" rel="noopener">
       <div class="card-image">
         <img
@@ -113,8 +122,14 @@ function createAnimalCard(animal) {
         />
       </div>
     </a>
-    <div class="card-content">
-      <div class="content">${name} ${gender} ${age}</div>
+    <div class="card-content has-text-centered p-3 is-flex is-flex-grow-1">
+      <div class="content is-flex-grow-1 is-flex is-flex-direction-column is-justify-content-space-between">
+        <p class="has-text-primary is-size-5 has-text-weight-bold m-1">${name}</p>
+        <p>
+          <span class="${genderColor}"><i class="fa-solid ${genderIconClass} m-1"></i></span>${gender}
+          <span class="has-text-success"> <i class="fa-solid fa-seedling"></i> ${age}
+          </p>
+      </div>
     </div>
   </div>
   `;
@@ -179,13 +194,20 @@ function createPagination(pagination) {
 
   // Add buttons to UI.
   nums.forEach((n) => {
-    ul.innerHTML += `<li><a class="pagination-link" aria-label="Goto page ${n}" ${PAG_NAV_PAGE_ATTRIBUTE}=${n}>${n}</a></li>`;
+    ul.innerHTML += `
+    <li>
+      <a class="pagination-link has-background-light has-text-white" 
+        aria-label="Goto page ${n}" ${PAG_NAV_PAGE_ATTRIBUTE}=${n}>
+         ${n}
+      </a>
+    </li>`;
   });
 
   // Style button for current page.
   const currentIndex = nums.indexOf(current);
   const currentLink = ul.children[currentIndex].querySelector("a");
   currentLink.classList.add("is-current");
+  currentLink.classList.toggle("has-background-light");
   currentLink.setAttribute("aria-current", "page");
 
   // Decide if to display ellipses next to first and last page.

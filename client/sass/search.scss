@@ -2,9 +2,21 @@
 
 // Set your brand colors
 $brown: #682F11;
+$palette-1: #E6DEDB;
+$palette-2: #C9AAA3;
+$palette-3: #9D635B;
+$palette-4: #682F11;
+$palette-5: #6B2E23;
+
 
 // Update Bulma's global variables
-$primary: $brown;
+$primary: $palette-5;
+$dark: $palette-4;
+$light: $palette-2;
+
+
+$link: $primary;
+
 
 // Update some of Bulma's component variables
 
