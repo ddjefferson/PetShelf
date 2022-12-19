@@ -1,9 +1,7 @@
 "use strict";
-const API_KEY = "";
-const API_SECRET = "";
 const LS_KEY = "petshelf-data";
-const PETFINDER_URL = "https://api.petfinder.com";
 
+const PETFINDER_URL = "https://api.petfinder.com";
 const ANIMALS_URI = "/v2/animals";
 const ANIMAL_TYPES_URI = "/v2/types";
 
@@ -51,9 +49,12 @@ window.addEventListener("load", async () => {
   const pagNav = document.querySelector("nav.pagination");
   pagNav.addEventListener("click", handlePaginationClick);
 
-  // See if user clicked cat, dog, or some other animal type before landing here.
+  // See if user clicked cat, dog, or some other valid animal type before landing here.
   let type = window.location.href.match(/type=(\w+)/);
-  if (type) {
+  if (!type) return;
+  type = type[1];
+  const { types } = await getAnimalTypes();
+  if (types.find(({ name }) => name.toLowerCase() === type.toLowerCase())) {
     searchModalForm.elements[ANIMAL_TYPES_ID.slice(1)].value = type;
     searchModalForm.requestSubmit();
   }
@@ -94,7 +95,6 @@ function updateParameterTags(params) {
   const filterTags = document.querySelector(FILTER_TAGS_ID);
 
   clearChildren(filterTags);
-  console.log(Array.from(params.values()));
   for (const [param, values] of params) {
     values.split(",").forEach((p) => {
       const tag = document.createElement("div");
@@ -114,9 +114,7 @@ function updateParameterTags(params) {
 
 async function removeFilterTag(e) {
   const tag = e.target.closest(".control");
-  console.log(tag);
   const param = tag.querySelector(".tag.is-link").textContent;
-  console.log(param);
   const filterForm = document.querySelector(`${FILTER_MODAL_ID} form`);
   const boxes = Array.from(
     filterForm.querySelectorAll(`input[type=checkbox]:checked`)
