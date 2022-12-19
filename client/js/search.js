@@ -19,8 +19,10 @@ const BREED_FILTER_INPUT_ID = "#breedSearch";
 const ANIMAL_BREED_ID = "#animalBreed";
 const ANIMAL_COLOR_ID = "#animalColor";
 const ANIMAL_COAT_ID = "#animalCoat";
-const SELECT_TYPE_BTN_ID = "#selectTypeBtn";
-const FILTER_MODAL_OPEN_BTN = "#filterModalOpenBtn";
+const CLOSE_SELECT_MODAL_BTN = "#closeSelectTypeBtn";
+const CLOSE_FILTER_MODAL_BTN = "#closeFilterBtn";
+const FILTER_MODAL_OPEN_BTN_ID = "#filterModalOpenBtn";
+const FILTER_TAGS_ID = "#filterTags";
 
 const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
 
@@ -35,11 +37,16 @@ window.addEventListener("load", async () => {
   const breedFilterInput = document.querySelector(BREED_FILTER_INPUT_ID);
   breedFilterInput.addEventListener("keydown", filterBreedNames);
 
-  const selectTypeBtn = document.querySelector(SELECT_TYPE_BTN_ID);
-  selectTypeBtn.addEventListener("click", resetSearchModalForm);
+  const closeSelectModalBtn = document.querySelector(CLOSE_SELECT_MODAL_BTN);
+  closeSelectModalBtn.addEventListener("click", resetSearchModalForm);
 
-  const filterOpenModalBtn = document.querySelector(FILTER_MODAL_OPEN_BTN);
-  filterOpenModalBtn.addEventListener("click", resetFilterModalForm);
+  const closeFilterModalBtn = document.querySelector(CLOSE_FILTER_MODAL_BTN);
+  closeFilterModalBtn.addEventListener("click", resetFilterModalForm);
+
+  const filterModalOpenBtn = document.querySelector(FILTER_MODAL_OPEN_BTN_ID);
+  filterModalOpenBtn.addEventListener("click", (e) =>
+    filterModalForm.scrollIntoView()
+  );
 
   const pagNav = document.querySelector("nav.pagination");
   pagNav.addEventListener("click", handlePaginationClick);
@@ -53,17 +60,18 @@ window.addEventListener("load", async () => {
 });
 
 // Event listeners
-
-function searchAnimalType(e) {
+async function searchAnimalType(e) {
   e.preventDefault();
   const animalType = e.target.elements.animalType.value;
   const pageURI = `${ANIMALS_URI}?type=${animalType}`;
-  displayAnimals(pageURI);
+  await displayAnimals(pageURI);
   populateFilterForm(animalType);
-  document.querySelector(FILTER_MODAL_OPEN_BTN).classList.remove("is-hidden");
+  document
+    .querySelector(FILTER_MODAL_OPEN_BTN_ID)
+    .classList.remove("is-hidden");
 }
 
-function filterAnimalType(e) {
+async function filterAnimalType(e) {
   e.preventDefault();
   const checked = e.target.querySelectorAll(`input[type=checkbox]:checked`);
 
@@ -75,8 +83,48 @@ function filterAnimalType(e) {
     params[box.name] = values;
   });
 
-  const uri = `${ANIMALS_URI}?${new URLSearchParams(Object.entries(params))}`;
-  displayAnimals(uri);
+  params = new URLSearchParams(Object.entries(params));
+  await displayAnimals(`${ANIMALS_URI}?${params}`);
+  // Show parameter tags
+  updateParameterTags(params);
+}
+
+function updateParameterTags(params) {
+  params.delete("type");
+  const filterTags = document.querySelector(FILTER_TAGS_ID);
+
+  clearChildren(filterTags);
+  console.log(Array.from(params.values()));
+  for (const [param, values] of params) {
+    values.split(",").forEach((p) => {
+      const tag = document.createElement("div");
+      tag.classList = "control";
+      tag.innerHTML = `
+      <div class="control">
+        <div class="tags has-addons">
+          <a class="tag is-link">${isNaN(p) ? p : param}</a>
+          <a class="tag is-delete"></a>
+        </div>
+      </div>`;
+      tag.addEventListener("click", removeFilterTag);
+      filterTags.append(tag);
+    });
+  }
+}
+
+async function removeFilterTag(e) {
+  const tag = e.target.closest(".control");
+  console.log(tag);
+  const param = tag.querySelector(".tag.is-link").textContent;
+  console.log(param);
+  const filterForm = document.querySelector(`${FILTER_MODAL_ID} form`);
+  const boxes = Array.from(
+    filterForm.querySelectorAll(`input[type=checkbox]:checked`)
+  );
+  const boxToUncheck = boxes.find((b) => b.value === param || b.name === param);
+  boxToUncheck.checked = false;
+  tag.remove();
+  filterForm.requestSubmit();
 }
 
 function filterBreedNames(e) {
@@ -111,14 +159,14 @@ function resetFilterModalForm(e) {
   document.querySelector(`${FILTER_MODAL_ID} form`).scrollIntoView();
 }
 
-function handlePaginationClick(e) {
+async function handlePaginationClick(e) {
   const page = e.target.getAttribute(PAG_NAV_PAGE_ATTRIBUTE);
 
   if (page) {
     const pagNav = document.querySelector(".pagination");
     let uri = pagNav.getAttribute(PAG_NAV_URI_ATTRIB);
     uri = uri.replace(/page=[\d]+/, `page=${page}`);
-    displayAnimals(uri);
+    await displayAnimals(uri);
   }
 }
 
@@ -246,8 +294,10 @@ function createPagination(pagination) {
   const ul = pagNav.querySelector(".pagination-list");
   clearChildren(ul);
   if (pagination.total_pages <= 1) {
+    pagNav.classList.add("is-hidden");
     return;
   }
+  pagNav.classList.remove("is-hidden");
 
   // Destructure pagination data.
   const { current_page: current, total_pages: total, _links } = pagination;

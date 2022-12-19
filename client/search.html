@@ -205,7 +205,11 @@
               </button>
             </div>
             <div class="control">
-              <button type="button" class="button modal-close-btn">
+              <button
+                id="closeSelectTypeBtn"
+                type="button"
+                class="button modal-close-btn"
+              >
                 <i class="fa-solid fa-circle-xmark"></i>
                 <span class="m-1">Close</span>
               </button>
@@ -389,7 +393,11 @@
               </button>
             </div>
             <div class="control">
-              <button type="button" class="button modal-close-btn">
+              <button
+                id="closeFilterBtn"
+                type="button"
+                class="button modal-close-btn"
+              >
                 <i class="fa-solid fa-circle-xmark"></i>
                 <span class="m-1">Close</span>
               </button>
@@ -420,7 +428,7 @@
           <span class="m-1">Filters</span>
         </button>
       </div>
-
+      <div id="filterTags" class="field is-grouped is-grouped-multiline"></div>
       <div id="searchResults" class="columns is-multiline my-2"></div>
       <nav
         class="pagination is-centered"
