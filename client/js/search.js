@@ -9,6 +9,7 @@ const ANIMAL_TYPES_URI = "/v2/types";
 
 const PAG_NAV_URI_ATTRIB = "page-navigation-uri";
 const PAG_NAV_PAGE_ATTRIBUTE = "data-page";
+const DATA_RESULTS_PARAMS_ATTRIB = "data-results-params";
 
 const SEARCH_RESULTS_ID = "#searchResults";
 const SEARCH_MODAL_ID = "#searchModal";
@@ -18,6 +19,8 @@ const BREED_FILTER_INPUT_ID = "#breedSearch";
 const ANIMAL_BREED_ID = "#animalBreed";
 const ANIMAL_COLOR_ID = "#animalColor";
 const ANIMAL_COAT_ID = "#animalCoat";
+const SELECT_TYPE_BTN_ID = "#selectTypeBtn";
+const FILTER_MODAL_OPEN_BTN = "#filterModalOpenBtn";
 
 const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
 
@@ -31,6 +34,12 @@ window.addEventListener("load", async () => {
 
   const breedFilterInput = document.querySelector(BREED_FILTER_INPUT_ID);
   breedFilterInput.addEventListener("keydown", filterBreedNames);
+
+  const selectTypeBtn = document.querySelector(SELECT_TYPE_BTN_ID);
+  selectTypeBtn.addEventListener("click", resetSearchModalForm);
+
+  const filterOpenModalBtn = document.querySelector(FILTER_MODAL_OPEN_BTN);
+  filterOpenModalBtn.addEventListener("click", resetFilterModalForm);
 
   const pagNav = document.querySelector("nav.pagination");
   pagNav.addEventListener("click", handlePaginationClick);
@@ -49,30 +58,31 @@ function searchAnimalType(e) {
   e.preventDefault();
   const animalType = e.target.elements.animalType.value;
   const pageURI = `${ANIMALS_URI}?type=${animalType}`;
-  displayAnimalResults(pageURI);
+  displayAnimals(pageURI);
   populateFilterForm(animalType);
+  document.querySelector(FILTER_MODAL_OPEN_BTN).classList.remove("is-hidden");
 }
 
 function filterAnimalType(e) {
   e.preventDefault();
-  console.log(e.target.elements);
   const checked = e.target.querySelectorAll(`input[type=checkbox]:checked`);
-  // Construct parameter strings.
 
-  const params = {};
+  // Construct parameter strings.
+  let params = { type: getCurrentResultParams().get("type") };
   checked.forEach((box) => {
     let values = params[box.name] || [];
     values.push(box.value);
     params[box.name] = values;
   });
-  Object.keys(params).forEach(
-    (name) => (params[name] = params[name].join(","))
-  );
-  console.log(params);
+
+  const uri = `${ANIMALS_URI}?${new URLSearchParams(Object.entries(params))}`;
+  displayAnimals(uri);
 }
 
 function filterBreedNames(e) {
-  const breeds = Array.from(document.querySelectorAll("#animalBreed .field"));
+  const breeds = Array.from(
+    document.querySelectorAll(`${ANIMAL_BREED_ID} .field`)
+  );
   const query = e.target.value.toLowerCase();
   breeds.forEach((breedField) => {
     if (breedField.querySelector("input").value.toLowerCase().includes(query)) {
@@ -83,6 +93,24 @@ function filterBreedNames(e) {
   });
 }
 
+// Ensure modal form shows the correctly selected values when it's re-opened.
+function resetSearchModalForm(e) {
+  const type = getCurrentResultParams().get("type");
+  const searchModalForm = document.querySelector(`${SEARCH_MODAL_ID} form`);
+  searchModalForm.elements[ANIMAL_TYPES_ID.slice(1)].value = type;
+}
+
+function resetFilterModalForm(e) {
+  const params = new URLSearchParams(getCurrentResultParams());
+  const inputs = document.querySelectorAll(
+    `${FILTER_MODAL_ID} input[type=checkbox]`
+  );
+  inputs.forEach((b) => {
+    b.checked = params.has(b.name) && params.get(b.name).includes(b.value);
+  });
+  document.querySelector(`${FILTER_MODAL_ID} form`).scrollIntoView();
+}
+
 function handlePaginationClick(e) {
   const page = e.target.getAttribute(PAG_NAV_PAGE_ATTRIBUTE);
 
@@ -90,7 +118,7 @@ function handlePaginationClick(e) {
     const pagNav = document.querySelector(".pagination");
     let uri = pagNav.getAttribute(PAG_NAV_URI_ATTRIB);
     uri = uri.replace(/page=[\d]+/, `page=${page}`);
-    displayAnimalResults(uri);
+    displayAnimals(uri);
   }
 }
 
@@ -100,12 +128,20 @@ function toggleDisableAllButtons() {
     .forEach((el) => el.classList.toggle("disabled-anchor"));
 }
 
+function getCurrentResultParams() {
+  const searchResults = document.querySelector(SEARCH_RESULTS_ID);
+  const oldParams = searchResults.getAttribute(DATA_RESULTS_PARAMS_ATTRIB);
+  return new URLSearchParams(oldParams);
+}
+
 /**
  * UI functions
  */
 
-async function displayAnimalResults(uri) {
+async function displayAnimals(uri) {
   const searchResults = document.querySelector(SEARCH_RESULTS_ID);
+  const params = uri.slice(uri.lastIndexOf("?") + 1);
+  searchResults.setAttribute(DATA_RESULTS_PARAMS_ATTRIB, params);
 
   // Loading animation while getting results.
   const LOADING_CLASS = "loading";

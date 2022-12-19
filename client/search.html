@@ -382,7 +382,7 @@
             <div class="control">
               <button
                 type="submit"
-                class="button is-primary has-background-primary-dark"
+                class="button modal-close-btn is-primary has-background-primary-dark"
               >
                 <i class="fa-solid fa-filter"></i>
                 <span class="m-1">Apply Filters</span>
@@ -404,6 +404,7 @@
     <div class="container my-2 p-3">
       <div class="is-flex is-justify-content-center">
         <button
+          id="selectTypeBtn"
           class="button has-background-primary has-text-white js-modal-trigger m-2"
           data-target="searchModal"
         >
@@ -411,7 +412,8 @@
           <span class="m-1">Select Pet</span>
         </button>
         <button
-          class="button is-primary has-background-primary-dark js-modal-trigger m-2"
+          id="filterModalOpenBtn"
+          class="button is-primary has-background-primary-dark js-modal-trigger m-2 is-hidden"
           data-target="filterModal"
         >
           <i class="fa-solid fa-filter"></i>
