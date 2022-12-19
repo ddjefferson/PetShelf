@@ -1,15 +1,24 @@
 @charset "utf-8";
 
-// Import a Google Font
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
-
 // Set your brand colors
-$brown: #682F11;
+$palette-1: #E6DEDB;
+$palette-2: #C9AAA3;
+$palette-3: #9D635B;
+$palette-4: #682F11;
+$palette-5: #6B2E23;
 
 // Update Bulma's global variables
-$link: $brown;
+$primary: $palette-5;
+$dark: $palette-4;
+$light: $palette-2;
+
+$link: $primary;
 
 // Update some of Bulma's component variables
 
 // Import only what you need from Bulma
 @import "../node_modules/bulma/bulma.sass";
+@import './search';
+@import './overlay';
+@import './funFactCarousel';
+@import './petGuide';
