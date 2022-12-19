@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
-
 body {
   background-color: #682f11;
   color: #ffffff;
@@ -24,7 +22,6 @@ p {
   display: grid;
   place-items: center;
 }
-/* css transtions */
 
 .hidden {
   opacity: 0;
