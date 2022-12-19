@@ -16,15 +16,12 @@
   <header>
 
     <!-- Top Nav Bar Starts -->
-    <nav class="navbar has shadow">
+    <nav class="navbar has-shadow">
       <div class="navbar-brand">
-        <!-- TODO: insert link -->
-        <figure class="image is-96x96">
-          <!-- <a class="navbar-item is-light" href="./index.html"> -->
-            <img src="img/logo2transparent.png" alt="PetShelf: The source for first time pet owners"
-              class="py-2 px-2" />
-          <!-- </a> -->
-        </figure>
+        <a class="is-light is-flex is-align-content-center" href="./index.html">
+          <img src="img/logo2transparent.png" alt="PetShelf: The source for first time pet owners" width="48px"
+            height="48px" />
+        </a>
         <div class="navbar-burger" data-target="navbarExampleTransparentExample">
           <span></span>
           <span></span>
@@ -69,11 +66,15 @@
     <!-- Top Nav Bar Ends -->
   </header>
 
-  <h1>Welcome to Pet Shelf!</h1>
-  <h3>Can we help you find a:</h3>
-
-  <!--Cat and dog cards begin  -->
   <section class="section">
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter">
+        <p class="title is-1 is-spaced">Welcome to Pet Shelf!</p>
+        <p class="subtitle is-3">Can we help you find a:</p>
+      </div>
+    </div>
+
+    <!--Cat and dog cards begin  -->
     <div class="container">
       <div class="columns cat-dog-tiles">
         <div class="column is-half cat-card">
@@ -92,46 +93,59 @@
     </div>
     <!-- Cat and dog cards end -->
 
-    <h3>Looking for something else?</h3>
-    <a class="button is-medium is-fullwidth is-responsive is-link block" href="./search.html">
-      Search Button
-    </a>
-
-    <!-- Fun fact carousel start -->
-    <section>
-      <h2 class="text-muted">Did you know?</h2>
-      <div class="box" id="slider">
-        <div class="card">
-          <div class="card-image">
-            <figure class="image is-128x128 is-covered">
-              <img src="./img/husky-placeholder.jpeg" alt="" />
-            </figure>
-          </div>
-          <div class="card-content slider-text carousel-inner">
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-image">
-            <figure class="image is-128x128 is-covered">
-              <img src="./img/color palette 2 - Copy.png" alt="" />
-            </figure>
-          </div>
-          <div class="card-content slider-text carousel-inner">
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-image">
-            <figure class="image is-128x128 is-covered">
-              <img src="./img/palette idea 5 - Copy.jpg" alt="" />
-            </figure>
-          </div>
-          <div class="card-content slider-text carousel-inner">
-          </div>
-        </div>
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter">
+        <p class="subtitle is-3">Looking for something else?</p>
       </div>
-    </section>
+    </div>
+    <div class="columns">
+      <div class="column is-half is-offset-one-quarter">
+        <a class="button is-medium is-fullwidth is-responsive is-link block" href="./search.html">
+          Search Other Options
+        </a>
+      </div>
+    </div>
   </section>
 
+  <!-- Fun fact carousel start -->
+  <div class="columns">
+    <div class="column is-half is-offset-one-quarter">
+      <section>
+        <p class="text-muted subtitle is-3">Did you know?</p>
+        <div class="box" id="slider">
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-128x128 is-covered">
+                <img src="./img/husky-placeholder.jpeg" alt="" />
+              </figure>
+            </div>
+            <div class="card-content slider-text carousel-inner">
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-128x128 is-covered">
+                <img src="./img/color palette 2 - Copy.png" alt="" />
+              </figure>
+            </div>
+            <div class="card-content slider-text carousel-inner">
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-image">
+              <figure class="image is-128x128 is-covered">
+                <img src="./img/palette idea 5 - Copy.jpg" alt="" />
+              </figure>
+            </div>
+            <div class="card-content slider-text carousel-inner">
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- scripts -->
   <script src="./js/funFactCarousel.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
   <script>

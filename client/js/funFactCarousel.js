@@ -39,7 +39,7 @@ function addToUI(facts) {
   carousel.forEach((slide) => {
     slide.innerHTML = `
         <div class="is-size-5">
-            <p class="text-white">${facts[i]}</p>
+            <p class="block">${facts[i]}</p>
         </div>
     `;
     i++;
