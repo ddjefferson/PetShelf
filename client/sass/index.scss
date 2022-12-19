@@ -14,6 +14,18 @@ $light: $palette-2;
 
 $link: $primary;
 
+// Navbar customization
+$navbar-background-color: #C9AAA3;
+$navbar-dropdown-item-hover-color: #682F11;
+$navbar-dropdown-item-hover-background-color: #C9AAA3;
+$navbar-dropdown-item-active-color: #682F11; 
+$navbar-dropdown-item-active-background-color: #C9AAA3; 
+$navbar-divider-background-color: #C9AAA3; 
+
+$box-padding: 1.25rem;
+$box-background-color: $palette-2;
+
+
 // Update some of Bulma's component variables
 
 // Import only what you need from Bulma
@@ -22,3 +34,4 @@ $link: $primary;
 @import './overlay';
 @import './funFactCarousel';
 @import './petGuide';
+@import './faq';
