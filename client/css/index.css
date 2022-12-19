@@ -1,7 +1,7 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 /*! bulma.io v0.9.4 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 .pagination-previous,
 .pagination-next,
 .pagination-link,
@@ -10280,4 +10280,319 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .footer {
   background-color: hsl(0deg, 0%, 98%);
   padding: 3rem 1.5rem 6rem;
+}
+
+.disabled-anchor {
+  pointer-events: none;
+}
+
+#searchResults {
+  transition: opacity 0.4s;
+}
+
+#searchResults.loading {
+  opacity: 0.5;
+}
+
+.cat-card {
+  position: relative;
+}
+
+.cat-card > a > img {
+  transform: scaleX(-1);
+}
+
+.cat-card > a:hover .overlay {
+  transform: scale(1);
+}
+
+.dog-card {
+  position: relative;
+}
+
+.dog-card > a:hover .overlay {
+  transform: scale(1);
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(57, 57, 57, 0.502);
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  transition: all 0.2s 0.1s ease-in-out;
+  color: #fff;
+  border-radius: 5px;
+  /* center overlay text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-text {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+#slider .card-content {
+  max-width: 50%;
+}
+
+#slider {
+  overflow: hidden;
+}
+
+@media screen and (max-width: 1023px) {
+  #slider .card-content {
+    display: none;
+  }
+}
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -50px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.item-slide img {
+  max-width: 1200px;
+}
+
+.caption-container {
+  color: white;
+}
+
+.card-image {
+  padding-left: 50px;
+}
+
+#petGuide {
+  background-color: #682f11;
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  padding: 0;
+  margin: 0;
+  /* css transtions */
+}
+#petGuide h1,
+#petGuide h2 {
+  font-weight: bold;
+  font-size: x-large;
+  text-decoration: underline;
+}
+#petGuide section {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  min-height: 100vh;
+}
+#petGuide p {
+  display: grid;
+  place-items: center;
+}
+#petGuide .hidden {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(-100%);
+  transition: all 1s;
+}
+@media (prefers-reduced-motion) {
+  #petGuide .hidden {
+    transition: none;
+  }
+}
+#petGuide .show {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateX(0);
+}
+@media (prefers-reduced-motion) {
+  #petGuide .hidden {
+    transition: none;
+  }
+}
+#petGuide .logos {
+  display: flex;
+}
+#petGuide .logo:nth-child(2) {
+  transition-delay: 200ms;
+}
+#petGuide .logo:nth-child(3) {
+  transition-delay: 400ms;
+}
+#petGuide .logo:nth-child(4) {
+  transition-delay: 600ms;
+}
+#petGuide footer {
+  color: black;
+}
+#petGuide .button:hover {
+  cursor: pointer;
+  color: transparent;
+}
+
+#FAQ {
+  --primary: #682f11;
+  --secondary: #c9aaa3;
+  --dark: #212121;
+  --light: #e6dedb;
+  --other: ;
+  background-color: var(--light);
+  font-family: montserrat, sans-serif;
+  width: 100%;
+  min-height: 100vh;
+}
+#FAQ .card,
+#FAQ .card2,
+#FAQ .card3 {
+  margin: 100px auto 0;
+  width: 400px;
+  height: 600px;
+  perspective: 1000px;
+}
+#FAQ .card__inner,
+#FAQ .card2__inner,
+#FAQ .card3__inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  position: relative;
+}
+#FAQ .card__inner.is-flipped,
+#FAQ .card2__inner.is-flipped,
+#FAQ .card3__inner.is-flipped {
+  transform: rotateY(180deg);
+}
+#FAQ .card__face,
+#FAQ .card2__face,
+#FAQ .card3__face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.2);
+}
+#FAQ .card__face--front,
+#FAQ .card2__face--front,
+#FAQ .card3__face--front {
+  background-image: linear-gradient(to bottom right, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#FAQ .card__face--front,
+#FAQ .card2__face--front,
+#FAQ .card3__face--front h2 {
+  color: #fff;
+  font-size: 32px;
+}
+#FAQ .card__face--back,
+#FAQ .card2__face--back,
+#FAQ .card3__face--back {
+  background-color: var(--light);
+  transform: rotateY(180deg);
+}
+#FAQ .card__content,
+#FAQ .card2__content,
+#FAQ .card3__content {
+  width: 100%;
+  height: 100%;
+}
+#FAQ .card__header,
+#FAQ .card2__header,
+#FAQ .card3__header {
+  position: relative;
+  padding: 30px 30px 40px;
+}
+#FAQ .card__header:after,
+#FAQ .card2__header:after,
+#FAQ .card3__header:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(to bottom left, var(--primary) 10%, var(--secondary) 115%);
+  z-index: -1;
+  border-radius: 0px 0px 50% 0px;
+}
+#FAQ .PetShelf,
+#FAQ .PetShelf2,
+#FAQ .PetShelf3 {
+  display: block;
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 5px solid #fff;
+  object-fit: cover;
+}
+#FAQ .card__header,
+#FAQ .card2__header,
+#FAQ .card3__header h2 {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+}
+#FAQ .card__body,
+#FAQ .card2__body,
+#FAQ .card3__body {
+  padding: 30px;
+}
+#FAQ .card__body,
+#FAQ .card2__body,
+#FAQ .card3__body h3 {
+  color: var(--dark);
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+#FAQ .card__body,
+#FAQ .card2__body,
+#FAQ .card3__body p {
+  color: var(--dark);
+  font-size: 18px;
+  line-height: 1.4;
+}
+#FAQ .hero {
+  text-align: center;
+  position: relative;
+  background-color: white;
 }

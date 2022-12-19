@@ -1,10 +1,6 @@
 @charset "utf-8";
 
-// Import a Google Font
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
-
 // Set your brand colors
-$brown: #682F11;
 $palette-1: #E6DEDB;
 $palette-2: #C9AAA3;
 $palette-3: #9D635B;
@@ -34,3 +30,8 @@ $box-background-color: $palette-2;
 
 // Import only what you need from Bulma
 @import "../node_modules/bulma/bulma.sass";
+@import './search';
+@import './overlay';
+@import './funFactCarousel';
+@import './petGuide';
+@import './faq';

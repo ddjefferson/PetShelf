@@ -1,0 +1,11 @@
+.disabled-anchor {
+    pointer-events: none;
+}
+
+#searchResults {
+    transition: opacity 0.4s;
+}
+
+#searchResults.loading {
+    opacity: 0.5;
+}

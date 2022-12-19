@@ -1,166 +1,206 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/ico" href="./img/logo2transparent.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css"
+    />
+    <link rel="stylesheet" href="./css/index.css" />
+    <title>PetShelf | Home</title>
+  </head>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" type="image/ico" href="./img/logo2transparent.png" />
-  <link rel="stylesheet" href="./css/index.css" />
-  <link rel="stylesheet" href="./css/index2.css" />
-  <link rel="stylesheet" href="./css/funFactCarousel.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css" />
-  <title>PetShelf | Home</title>
-</head>
-
-<body class="has-background-primary-light">
-  <header>
-
-    <!-- Top Nav Bar Starts -->
-    <nav class="navbar has-shadow">
-      <div class="navbar-brand">
-        <a class="is-light is-flex is-align-content-center" href="./index.html">
-          <img src="img/logo2transparent.png" alt="PetShelf: The source for first time pet owners" width="48px"
-            height="48px" />
-        </a>
-        <div class="navbar-burger" data-target="navbarExampleTransparentExample">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-
-      <div id="navbarExampleTransparentExample" class="navbar-menu">
-        <div class="navbar-start">
-          <a class="navbar-item" href="./petguide.html"> New Pet Owner </a>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link" href="#"> FAQs </a>
-            <div class="navbar-dropdown is-boxed">
-              <a class="navbar-item" href="./petguide.html"> Resources </a>
-
-              <hr class="navbar-divider" />
-              <a class="navbar-item is-active" href="#"> N/A </a>
-            </div>
+  <body class="has-background-primary-light">
+    <header>
+      <!-- Top Nav Bar Starts -->
+      <nav class="navbar has-shadow">
+        <div class="navbar-brand">
+          <a
+            class="is-light is-flex is-align-content-center"
+            href="./index.html"
+          >
+            <img
+              src="img/logo2transparent.png"
+              alt="PetShelf: The source for first time pet owners"
+              width="48px"
+              height="48px"
+            />
+          </a>
+          <div
+            class="navbar-burger"
+            data-target="navbarExampleTransparentExample"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
         </div>
 
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="field is-grouped">
-              <p class="control">
-                <a class="bd-heart-button button is-light" data-social-network="#" data-social-action="#"
-                  data-social-target="#" target="#" href="./favorites.html">
-                  <span><img src="img/heart.png" alt="heart-icon1" style="max-height: 50px" class="py-2 px-2" /></span>
-                </a>
-              </p>
-              <p class="control">
-                <a class="bd-heart-button button is-light" data-social-network="#" data-social-action="#"
-                  data-social-target="#" target="#" href="./savedResources.html">
-                  <span><img src="img/book.png" alt="heart-icon1" style="max-height: 50px" class="py-2 px-2" /></span>
-                </a>
-              </p>
+        <div id="navbarExampleTransparentExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="./petguide.html"> New Pet Owner </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link" href="#"> FAQs </a>
+              <div class="navbar-dropdown is-boxed">
+                <a class="navbar-item" href="./petguide.html"> Resources </a>
+
+                <hr class="navbar-divider" />
+                <a class="navbar-item is-active" href="#"> N/A </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="field is-grouped">
+                <p class="control">
+                  <a
+                    class="bd-heart-button button is-light"
+                    data-social-network="#"
+                    data-social-action="#"
+                    data-social-target="#"
+                    target="#"
+                    href="./favorites.html"
+                  >
+                    <span
+                      ><img
+                        src="img/heart.png"
+                        alt="heart-icon1"
+                        style="max-height: 50px"
+                        class="py-2 px-2"
+                    /></span>
+                  </a>
+                </p>
+                <p class="control">
+                  <a
+                    class="bd-heart-button button is-light"
+                    data-social-network="#"
+                    data-social-action="#"
+                    data-social-target="#"
+                    target="#"
+                    href="./savedResources.html"
+                  >
+                    <span
+                      ><img
+                        src="img/book.png"
+                        alt="heart-icon1"
+                        style="max-height: 50px"
+                        class="py-2 px-2"
+                    /></span>
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </nav>
-    <!-- Top Nav Bar Ends -->
-  </header>
+      </nav>
+      <!-- Top Nav Bar Ends -->
+    </header>
 
-  <section class="section">
-    <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
-        <p class="title is-1 is-spaced">Welcome to Pet Shelf!</p>
-        <p class="subtitle is-3">Can we help you find a:</p>
+    <section class="section">
+      <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+          <p class="title is-1 is-spaced">Welcome to Pet Shelf!</p>
+          <p class="subtitle is-3">Can we help you find a:</p>
+        </div>
       </div>
-    </div>
 
-    <!--Cat and dog cards begin  -->
-    <div class="container">
-      <div class="columns cat-dog-tiles">
-        <div class="column is-half cat-card">
-          <a href="./search.html?type=cat">
-            <img style="width: 100%; object-fit: cover; aspect-ratio: 1/1;" src="img/cat3.png" alt="">
-            <h3 class="overlay">Cat?</h3>
+      <!--Cat and dog cards begin  -->
+      <div class="container">
+        <div class="columns cat-dog-tiles">
+          <div class="column is-half cat-card">
+            <a href="./search.html?type=cat">
+              <img
+                style="width: 100%; object-fit: cover; aspect-ratio: 1/1"
+                src="img/cat3.png"
+                alt=""
+              />
+              <h3 class="overlay">Cat?</h3>
+            </a>
+          </div>
+          <div class="column is-half dog-card">
+            <a href="./search.html?type=dog">
+              <img
+                style="width: 100%; object-fit: cover; aspect-ratio: 1/1"
+                src="img/dog.png"
+                alt=""
+              />
+              <h3 class="overlay">Dog?</h3>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- Cat and dog cards end -->
+
+      <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+          <p class="subtitle is-3">Looking for something else?</p>
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+          <a
+            class="button is-medium is-fullwidth is-responsive is-link block"
+            href="./search.html"
+          >
+            Search Other Options
           </a>
         </div>
-        <div class="column is-half dog-card">
-          <a href="./search.html?type=dog">
-            <img style="width: 100%; object-fit: cover; aspect-ratio: 1/1;" src="img/dog.png" alt="">
-            <h3 class="overlay">Dog?</h3>
-          </a>
-        </div>
       </div>
-    </div>
-    <!-- Cat and dog cards end -->
+    </section>
 
+    <!-- Fun fact carousel start -->
     <div class="columns">
       <div class="column is-half is-offset-one-quarter">
-        <p class="subtitle is-3">Looking for something else?</p>
+        <section>
+          <p class="text-muted subtitle is-3">Did you know?</p>
+          <div class="box" id="slider">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-128x128 is-covered">
+                  <img src="./img/husky-placeholder.jpeg" alt="" />
+                </figure>
+              </div>
+              <div class="card-content slider-text carousel-inner"></div>
+            </div>
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-128x128 is-covered">
+                  <img src="./img/color palette 2 - Copy.png" alt="" />
+                </figure>
+              </div>
+              <div class="card-content slider-text carousel-inner"></div>
+            </div>
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-128x128 is-covered">
+                  <img src="./img/palette idea 5 - Copy.jpg" alt="" />
+                </figure>
+              </div>
+              <div class="card-content slider-text carousel-inner"></div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
-    <div class="columns">
-      <div class="column is-half is-offset-one-quarter">
-        <a class="button is-medium is-fullwidth is-responsive is-link block" href="./search.html">
-          Search Other Options
-        </a>
-      </div>
+
+    <!-- scripts -->
+    <script src="./js/funFactCarousel.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
+    <script>
+      bulmaCarousel.attach("#slider", {
+        slidesToScroll: 1,
+        slidesToShow: 1,
+        infinite: true,
+        autoplay: true,
+      });
+    </script>
+  </body>
+  <footer class="footer">
+    <div class="content has-text-centered">
+      <p><strong>PetShelf</strong> by <a href="#">SCD</a> &copy; 2022</p>
     </div>
-  </section>
-
-  <!-- Fun fact carousel start -->
-  <div class="columns">
-    <div class="column is-half is-offset-one-quarter">
-      <section>
-        <p class="text-muted subtitle is-3">Did you know?</p>
-        <div class="box" id="slider">
-          <div class="card">
-            <div class="card-image">
-              <figure class="image is-128x128 is-covered">
-                <img src="./img/husky-placeholder.jpeg" alt="" />
-              </figure>
-            </div>
-            <div class="card-content slider-text carousel-inner">
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-image">
-              <figure class="image is-128x128 is-covered">
-                <img src="./img/color palette 2 - Copy.png" alt="" />
-              </figure>
-            </div>
-            <div class="card-content slider-text carousel-inner">
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-image">
-              <figure class="image is-128x128 is-covered">
-                <img src="./img/palette idea 5 - Copy.jpg" alt="" />
-              </figure>
-            </div>
-            <div class="card-content slider-text carousel-inner">
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </div>
-
-  <!-- scripts -->
-  <script src="./js/funFactCarousel.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
-  <script>
-    bulmaCarousel.attach('#slider', {
-      slidesToScroll: 1,
-      slidesToShow: 1,
-      infinite: true,
-      autoplay: true,
-    });
-  </script>
-</body>
-<footer class="footer">
-  <div class="content has-text-centered">
-    <p><strong>PetShelf</strong> by <a href="#">SCD</a> &copy; 2022</p>
-  </div>
-</footer>
-
+  </footer>
 </html>
