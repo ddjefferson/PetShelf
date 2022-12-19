@@ -105,11 +105,7 @@
         <form class="p-2 has-text-primary has-background-white p-2">
           <h1 class="title has-text-centered has-text-primary">Search</h1>
 
-          <fieldset
-            id="animalTypes"
-            required
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset id="animalType" required class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Pet Type
             </legend>
@@ -221,39 +217,37 @@
       <div class="modal-content">
         <form id="filterForm" class="has-background-white p-4">
           <h1 class="title has-text-centered has-text-primary">Filters</h1>
-          <fieldset
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Breed
             </legend>
             <div class="field">
               <div class="control">
-                <input class="input" type="text" placeholder="Search Breed" />
+                <input
+                  id="breedSearch"
+                  class="input"
+                  type="text"
+                  placeholder="Search Breed"
+                />
               </div>
             </div>
-            <div id="animalBreed"></div>
+            <div
+              id="animalBreed"
+              class="has-background-light p-4"
+              style="max-height: 200px; overflow-y: scroll"
+            ></div>
           </fieldset>
-          <fieldset
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Color
             </legend>
             <div id="animalColor"></div>
           </fieldset>
-          <fieldset
-            id="animalCoat"
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
-            <legend class="has-text-centered has-text-weight-bold">
-              Color
-            </legend>
+          <fieldset class="box">
+            <legend class="has-text-centered has-text-weight-bold">Coat</legend>
+            <div id="animalCoat"></div>
           </fieldset>
-          <fieldset
-            id="animalSize"
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset id="animalSize" class="box">
             <legend class="has-text-centered has-text-weight-bold">Size</legend>
             <div class="field">
               <div class="control">
@@ -288,10 +282,7 @@
               </div>
             </div>
           </fieldset>
-          <fieldset
-            id="animalGenders"
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset id="animalGenders" class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Gender
             </legend>
@@ -320,10 +311,7 @@
               </div>
             </div>
           </fieldset>
-          <fieldset
-            id="animalAge"
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset id="animalAge" class="box">
             <legend class="has-text-centered has-text-weight-bold">Age</legend>
             <div class="field">
               <div class="control">
@@ -358,9 +346,7 @@
               </div>
             </div>
           </fieldset>
-          <fieldset
-            class="box is-flex is-flex-direction-column is-align-content-center is-flex-wrap-wrap"
-          >
+          <fieldset class="box">
             <legend class="has-text-centered has-text-weight-bold">
               Good With
             </legend>
