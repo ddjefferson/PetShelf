@@ -10489,17 +10489,13 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   width: 100%;
   min-height: 100vh;
 }
-#FAQ .card,
-#FAQ .card2,
-#FAQ .card3 {
+#FAQ .flip-card {
   margin: 100px auto 0;
   width: 400px;
   height: 600px;
   perspective: 1000px;
 }
-#FAQ .card__inner,
-#FAQ .card2__inner,
-#FAQ .card3__inner {
+#FAQ .flip-card__inner {
   width: 100%;
   height: 100%;
   transition: transform 1s;
@@ -10507,14 +10503,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   cursor: pointer;
   position: relative;
 }
-#FAQ .card__inner.is-flipped,
-#FAQ .card2__inner.is-flipped,
-#FAQ .card3__inner.is-flipped {
+#FAQ .flip-card__inner.is-flipped {
   transform: rotateY(180deg);
 }
-#FAQ .card__face,
-#FAQ .card2__face,
-#FAQ .card3__face {
+#FAQ .flip-card__face {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -10524,41 +10516,29 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   border-radius: 16px;
   box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.2);
 }
-#FAQ .card__face--front,
-#FAQ .card2__face--front,
-#FAQ .card3__face--front {
+#FAQ .flip-card__face--front {
   background-image: linear-gradient(to bottom right, var(--primary), var(--secondary));
   display: flex;
   align-items: center;
   justify-content: center;
 }
-#FAQ .card__face--front,
-#FAQ .card2__face--front,
-#FAQ .card3__face--front h2 {
+#FAQ .flip-card__face--front h2 {
   color: #fff;
   font-size: 32px;
 }
-#FAQ .card__face--back,
-#FAQ .card2__face--back,
-#FAQ .card3__face--back {
+#FAQ .flip-card__face--back {
   background-color: var(--light);
   transform: rotateY(180deg);
 }
-#FAQ .card__content,
-#FAQ .card2__content,
-#FAQ .card3__content {
+#FAQ .flip-card__content {
   width: 100%;
   height: 100%;
 }
-#FAQ .card__header,
-#FAQ .card2__header,
-#FAQ .card3__header {
+#FAQ .flip-card__header {
   position: relative;
   padding: 30px 30px 40px;
 }
-#FAQ .card__header:after,
-#FAQ .card2__header:after,
-#FAQ .card3__header:after {
+#FAQ .flip-card__header:after {
   content: "";
   display: block;
   position: absolute;
@@ -10570,8 +10550,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   z-index: -1;
   border-radius: 0px 0px 50% 0px;
 }
-#FAQ .PetShelf,
-#FAQ .PetShelf2,
 #FAQ .PetShelf3 {
   display: block;
   width: 128px;
@@ -10582,31 +10560,23 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   border: 5px solid #fff;
   object-fit: cover;
 }
-#FAQ .card__header,
-#FAQ .card2__header,
-#FAQ .card3__header h2 {
+#FAQ .flip-card__header {
   color: #fff;
   font-size: 32px;
   font-weight: 900;
   text-transform: uppercase;
   text-align: center;
 }
-#FAQ .card__body,
-#FAQ .card2__body,
-#FAQ .card3__body {
+#FAQ .flip-card__body {
   padding: 30px;
 }
-#FAQ .card__body,
-#FAQ .card2__body,
-#FAQ .card3__body h3 {
+#FAQ .flip-card__body h3 {
   color: var(--dark);
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 15px;
 }
-#FAQ .card__body,
-#FAQ .card2__body,
-#FAQ .card3__body p {
+#FAQ .flip-card__body p {
   color: var(--dark);
   font-size: 18px;
   line-height: 1.4;
