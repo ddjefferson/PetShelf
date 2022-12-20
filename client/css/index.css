@@ -10314,21 +10314,29 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   transform: scale(1);
 }
 
+.hero {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url("../img/heroBanner.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
 .overlay {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(57, 57, 57, 0.502);
+  background: rgba(107, 46, 35, 0.5411764706);
   top: 0;
   left: 0;
   transform: scale(0);
   transition: all 0.2s 0.1s ease-in-out;
-  color: #fff;
   border-radius: 5px;
   /* center overlay text */
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 48px;
+  color: #f1e8e4;
 }
 
 #funFactCarousel .slider-text {
@@ -10337,11 +10345,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 #funFactCarousel #slider {
   overflow: hidden;
-}
-@media screen and (max-width: 1023px) {
-  #funFactCarousel #slider .card-content {
-    display: none;
-  }
 }
 #funFactCarousel .prev,
 #funFactCarousel .next {
@@ -10387,6 +10390,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 #funFactCarousel .card {
   min-height: 320px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100%;
 }
 
 #petGuide {
