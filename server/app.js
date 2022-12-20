@@ -2,7 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 
-const { CLIENT_ID, CLIENT_SECRET, API_URL, PORT } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, API_URL } = process.env;
+const PORT = process.env.PORT || 5000;
 const AUTH_URI = "/oauth2/token";
 
 const app = express();
