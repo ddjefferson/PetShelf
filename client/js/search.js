@@ -469,7 +469,7 @@ async function getAccessToken() {
 
 async function getNewAccessToken() {
   // "http://127.0.0.1:5000/token"
-  const url = "petsg.xyz/api/petshelf/token";
+  const url = "https://petsg.xyz/api/petshelf/token";
   const res = await fetch(url);
   const { data, success } = await res.json();
   return data;
