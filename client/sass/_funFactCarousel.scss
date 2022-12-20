@@ -1,12 +1,12 @@
 #funFactCarousel {
   .slider-text {
-    position: absolute;
+    // position: absolute;
     right: 0;
     bottom: 0
   }
   
 #slider .card-content{
-    max-width: 50%;
+    // max-width: 50%;
   }
   
 #slider{
@@ -63,5 +63,13 @@
   padding-left: 50px;
 }
 
+.card-image img {
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  width: 200px;
+}
 
+.card{
+  min-height: 320px;
+}
 }

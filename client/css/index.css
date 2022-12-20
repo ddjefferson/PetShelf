@@ -10332,12 +10332,8 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 #funFactCarousel .slider-text {
-  position: absolute;
   right: 0;
   bottom: 0;
-}
-#funFactCarousel #slider .card-content {
-  max-width: 50%;
 }
 #funFactCarousel #slider {
   overflow: hidden;
@@ -10383,6 +10379,14 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 #funFactCarousel .card-image {
   padding-left: 50px;
+}
+#funFactCarousel .card-image img {
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  width: 200px;
+}
+#funFactCarousel .card {
+  min-height: 320px;
 }
 
 #petGuide {
