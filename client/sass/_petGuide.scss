@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 
 #petGuide {
-    background-color: #682f11;
+    // background-color: #682f11;
     color: #ffffff;
     font-family: "Poppins", sans-serif;
     padding: 0;
@@ -63,6 +63,32 @@
   .logo:nth-child(4) {
     transition-delay: 600ms;
   }
+
+  .logo img{
+    width: 175px; 
+    object-fit: contain; 
+    aspect-ratio: 1/1
+
+  }
+
+  @media (min-width: 1000px) {
+    .box {
+      width: 900px;
+
+    }
+  }
+
+  @media (max-width: 999px) {
+    .box {
+      width: 100%;
+    }
+  }
+
+  #checkList ul {
+    list-style-type: square;
+  }
+
+
   
   footer {
     color: black;
