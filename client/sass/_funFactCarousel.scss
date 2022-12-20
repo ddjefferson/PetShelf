@@ -15,7 +15,7 @@
   
 @media screen and (max-width: 1023px) {
     #slider .card-content{
-      display: none;
+      // display: none;
     }
   }
 
@@ -71,5 +71,10 @@
 
 .card{
   min-height: 320px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+
 }
 }
