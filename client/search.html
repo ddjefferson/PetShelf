@@ -19,96 +19,100 @@
 
   <body class="has-background-primary-light">
     <!-- Top Nav Bar Starts -->
-    <nav class="navbar is-white has-shadow">
-      <div class="navbar-brand">
-        <!-- TODO: insert link -->
-        <a class="navbar-item" href="./index.html">
-          <img
-            src="img/logo2transparent.png"
-            alt="PetShelf: The source for first time pet owners"
-            style="max-height: 125px"
-            class="py-2 px-2"
-          />
-        </a>
-        <div
-          class="navbar-burger"
-          data-target="navbarExampleTransparentExample"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-
-      <div id="navbarExampleTransparentExample" class="navbar-menu">
-        <div class="navbar-start">
-          <a class="navbar-item" href="./newOwner.html"> New Pet Owner </a>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link" href="#"> FAQs </a>
-            <div class="navbar-dropdown is-boxed">
-              <a class="navbar-item" href="./resources.html"> Resources </a>
-
-              <hr class="navbar-divider" />
-              <a class="navbar-item" href="#"> N/A </a>
-              <a class="navbar-item is-active" href="#"> N/A </a>
-            </div>
+    <header>
+      <!-- Top Nav Bar Starts -->
+      <nav class="navbar has-shadow">
+        <div class="navbar-brand">
+          <a
+            class="is-light is-flex is-align-content-center"
+            href="./index.html"
+          >
+            <img
+              src="img/logo2transparent.png"
+              alt="PetShelf: The source for first time pet owners"
+              width="48px"
+              height="48px"
+            />
+          </a>
+          <div
+            class="navbar-burger"
+            data-target="navbarExampleTransparentExample"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
         </div>
 
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="field is-grouped">
-              <p class="control">
-                <a
-                  class="bd-heart-button button"
-                  data-social-network="#"
-                  data-social-action="#"
-                  data-social-target="#"
-                  target="#"
-                  href="./favorites.html"
-                >
-                  <span
-                    ><img
-                      src="img/heart.png"
-                      alt="heart-icon1"
-                      style="max-height: 50px"
-                      class="py-2 px-2"
-                  /></span>
-                </a>
-              </p>
-              <p class="control">
-                <a
-                  class="bd-heart-button button"
-                  data-social-network="#"
-                  data-social-action="#"
-                  data-social-target="#"
-                  target="#"
-                  href="./savedResources.html"
-                >
-                  <span
-                    ><img
-                      src="img/book.png"
-                      alt="heart-icon1"
-                      style="max-height: 50px"
-                      class="py-2 px-2"
-                  /></span>
-                </a>
-              </p>
+        <div id="navbarExampleTransparentExample" class="navbar-menu">
+          <div class="navbar-start">
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link"> New Pet Owner </a>
+              <div class="navbar-dropdown is-boxed">
+                <a class="navbar-item" href="./petguide.html"> Pet Guide </a>
+
+                <hr class="navbar-divider" />
+                <a class="navbar-item is-active" href="./faq.html"> FAQs</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="field is-grouped">
+                <p class="control">
+                  <a
+                    class="bd-heart-button button is-light"
+                    data-social-network="#"
+                    data-social-action="#"
+                    data-social-target="#"
+                    target="#"
+                    href="./favorites.html"
+                  >
+                    <span
+                      ><img
+                        src="img/heart.png"
+                        alt="heart-icon1"
+                        style="max-height: 50px"
+                        class="py-2 px-2"
+                    /></span>
+                  </a>
+                </p>
+                <p class="control">
+                  <a
+                    class="bd-heart-button button is-light"
+                    data-social-network="#"
+                    data-social-action="#"
+                    data-social-target="#"
+                    target="#"
+                    href="./petguide.html"
+                  >
+                    <span
+                      ><img
+                        src="img/book.png"
+                        alt="heart-icon1"
+                        style="max-height: 50px"
+                        class="py-2 px-2"
+                    /></span>
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+      <!-- Top Nav Bar Ends -->
+    </header>
     <div id="searchModal" class="modal">
       <div class="modal-background"></div>
-      <div class="modal-content has-background-light">
-        <form class="p-2 has-text-primary has-background-white p-2">
+      <div class="modal-content">
+        <form class="p-2 has-text-primary p-2 has-background-primary-light">
           <h1 class="title has-text-centered has-text-primary">Search</h1>
 
           <fieldset id="animalType" required class="box">
-            <legend class="has-text-centered has-text-weight-bold">
+            <p class="has-text-centered has-text-weight-bold is-size-4">
               Pet Type
-            </legend>
+            </p>
             <div class="field">
               <div class="control">
                 <label class="radio">
@@ -199,9 +203,10 @@
             id="distanceField"
             class="box is-flex is-justify-content-center is-hidden"
           >
-            <legend class="has-text-centered has-text-weight-bold">
+            <p class="has-text-centered has-text-weight-bold is-size-4">
               Distance
-            </legend>
+            </p>
+
             <div class="select">
               <select name="distanceField">
                 <option value="">Anywhere</option>
@@ -240,13 +245,13 @@
     </div>
     <div id="filterModal" class="modal">
       <div class="modal-background"></div>
-      <div class="modal-content has-background-light">
-        <form id="filterForm" class="p-4 has-background-white">
+      <div class="modal-content">
+        <form id="filterForm" class="p-4 has-background-primary-light">
           <h1 class="title has-text-centered has-text-primary">Filters</h1>
           <fieldset class="box">
-            <legend class="has-text-centered has-text-weight-bold">
+            <p class="has-text-centered has-text-weight-bold is-size-4">
               Breed
-            </legend>
+            </p>
             <div class="field">
               <div class="control">
                 <input
@@ -264,17 +269,17 @@
             ></div>
           </fieldset>
           <fieldset class="box">
-            <legend class="has-text-centered has-text-weight-bold">
+            <p class="has-text-centered has-text-weight-bold is-size-4">
               Color
-            </legend>
+            </p>
             <div id="animalColor"></div>
           </fieldset>
           <fieldset class="box">
-            <legend class="has-text-centered has-text-weight-bold">Coat</legend>
+            <p class="has-text-centered has-text-weight-bold is-size-4">Coat</p>
             <div id="animalCoat"></div>
           </fieldset>
           <fieldset id="animalSize" class="box">
-            <legend class="has-text-centered has-text-weight-bold">Size</legend>
+            <p class="has-text-centered has-text-weight-bold is-size-4">Size</p>
             <div class="field">
               <div class="control">
                 <label class="checkbox">
@@ -309,9 +314,9 @@
             </div>
           </fieldset>
           <fieldset id="animalGenders" class="box">
-            <legend class="has-text-centered has-text-weight-bold">
+            <p class="has-text-centered has-text-weight-bold is-size-4">
               Gender
-            </legend>
+            </p>
             <div class="field">
               <div class="control">
                 <label class="checkbox">
@@ -338,7 +343,7 @@
             </div>
           </fieldset>
           <fieldset id="animalAge" class="box">
-            <legend class="has-text-centered has-text-weight-bold">Age</legend>
+            <p class="has-text-centered has-text-weight-bold is-size-4">Age</p>
             <div class="field">
               <div class="control">
                 <label class="checkbox">
@@ -373,9 +378,9 @@
             </div>
           </fieldset>
           <fieldset class="box">
-            <legend class="has-text-centered has-text-weight-bold">
+            <p class="has-text-centered has-text-weight-bold is-size-4">
               Good With
-            </legend>
+            </p>
             <div class="field">
               <div class="control">
                 <label class="checkbox">
@@ -428,7 +433,7 @@
     </div>
 
     <!-- Types of animals that can be searched. -->
-    <div class="container my-2 p-3">
+    <div class="container my-2 p-2">
       <div class="is-flex is-justify-content-center">
         <button
           id="selectTypeBtn"
@@ -449,6 +454,8 @@
       </div>
       <div id="filterTags" class="field is-grouped is-grouped-multiline"></div>
       <div id="searchResults" class="columns is-multiline my-2"></div>
+    </div>
+    <div class="container">
       <nav
         class="pagination is-centered"
         role="navigation"
