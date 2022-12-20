@@ -436,7 +436,7 @@ table th {
 }
 /* Bulma Elements */
 .box {
-  background-color: #C9AAA3;
+  background-color: hsl(0deg, 0%, 100%);
   border-radius: 6px;
   box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   color: hsl(0deg, 0%, 29%);
@@ -10331,27 +10331,24 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   justify-content: center;
 }
 
-.slider-text {
+#funFactCarousel .slider-text {
   position: absolute;
   right: 0;
   bottom: 0;
 }
-
-#slider .card-content {
+#funFactCarousel #slider .card-content {
   max-width: 50%;
 }
-
-#slider {
+#funFactCarousel #slider {
   overflow: hidden;
 }
-
 @media screen and (max-width: 1023px) {
-  #slider .card-content {
+  #funFactCarousel #slider .card-content {
     display: none;
   }
 }
-.prev,
-.next {
+#funFactCarousel .prev,
+#funFactCarousel .next {
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -10366,13 +10363,11 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   user-select: none;
   -webkit-user-select: none;
 }
-
-.next {
+#funFactCarousel .next {
   right: 0;
   border-radius: 3px 0 0 3px;
 }
-
-.numbertext {
+#funFactCarousel .numbertext {
   color: #f2f2f2;
   font-size: 12px;
   padding: 8px 12px;
@@ -10380,16 +10375,13 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   right: 0;
   top: 0;
 }
-
-.item-slide img {
+#funFactCarousel .item-slide img {
   max-width: 1200px;
 }
-
-.caption-container {
+#funFactCarousel .caption-container {
   color: white;
 }
-
-.card-image {
+#funFactCarousel .card-image {
   padding-left: 50px;
 }
 
