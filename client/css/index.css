@@ -10397,7 +10397,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 
 #petGuide {
-  background-color: #682f11;
   color: #ffffff;
   font-family: "Poppins", sans-serif;
   padding: 0;
@@ -10452,6 +10451,24 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 }
 #petGuide .logo:nth-child(4) {
   transition-delay: 600ms;
+}
+#petGuide .logo img {
+  width: 175px;
+  object-fit: contain;
+  aspect-ratio: 1/1;
+}
+@media (min-width: 1000px) {
+  #petGuide .box {
+    width: 900px;
+  }
+}
+@media (max-width: 999px) {
+  #petGuide .box {
+    width: 100%;
+  }
+}
+#petGuide #checkList ul {
+  list-style-type: square;
 }
 #petGuide footer {
   color: black;
