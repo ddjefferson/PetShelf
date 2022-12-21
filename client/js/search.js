@@ -5,31 +5,41 @@ const PETFINDER_URL = "https://api.petfinder.com";
 const ANIMALS_URI = "/v2/animals";
 const ANIMAL_TYPES_URI = "/v2/types";
 
-const PAG_NAV_URI_ATTRIB = "page-navigation-uri";
 const PAG_NAV_PAGE_ATTRIBUTE = "data-page";
-const DATA_RESULTS_PARAMS_ATTRIB = "data-results-params";
+const RESULTS_PARAMS_ATTRIB = "data-results-params";
 
 const SEARCH_RESULTS_ID = "#searchResults";
-const SEARCH_MODAL_ID = "#searchModal";
-const FILTER_MODAL_ID = "#filterModal";
+const TYPE_MODAL_ID = "#searchModal";
 const ANIMAL_TYPES_ID = "#animalType";
+const LOCATION_BTN = "#locationBtn";
+const DISTANCE_FIELD_ID = "#distanceField";
+const CLOSE_TYPE_MODAL_BTN_ID = "#closeSelectTypeBtn";
+const FILTER_MODAL_ID = "#filterModal";
 const BREED_FILTER_INPUT_ID = "#breedSearch";
 const ANIMAL_BREED_ID = "#animalBreed";
 const ANIMAL_COLOR_ID = "#animalColor";
 const ANIMAL_COAT_ID = "#animalCoat";
-const CLOSE_SELECT_MODAL_BTN = "#closeSelectTypeBtn";
-const CLOSE_FILTER_MODAL_BTN = "#closeFilterBtn";
+const CLOSE_FILTER_MODAL_BTN_ID = "#closeFilterBtn";
 const FILTER_MODAL_OPEN_BTN_ID = "#filterModalOpenBtn";
 const FILTER_TAGS_ID = "#filterTags";
-const LOCATION_BTN = "#locationBtn";
-const DISTANCE_FIELD_ID = "#distanceField";
 
 const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
 
 window.addEventListener("load", async () => {
   // Set up event listeners
-  const searchModalForm = document.querySelector(`${SEARCH_MODAL_ID} form`);
+  const searchModalForm = document.querySelector(`${TYPE_MODAL_ID} form`);
   searchModalForm.addEventListener("submit", searchAnimalType);
+
+  const locationBtn = document.querySelector(LOCATION_BTN);
+  locationBtn.addEventListener("click", requestUserLocation);
+
+  const closeTypeModalBtn = document.querySelector(CLOSE_TYPE_MODAL_BTN_ID);
+  closeTypeModalBtn.addEventListener("click", resetSearchModalForm);
+
+  const filterModalOpenBtn = document.querySelector(FILTER_MODAL_OPEN_BTN_ID);
+  filterModalOpenBtn.addEventListener("click", (e) =>
+    filterModalForm.scrollIntoView()
+  );
 
   const filterModalForm = document.querySelector(`${FILTER_MODAL_ID} form`);
   filterModalForm.addEventListener("submit", handleApplyFilters);
@@ -37,22 +47,11 @@ window.addEventListener("load", async () => {
   const breedFilterInput = document.querySelector(BREED_FILTER_INPUT_ID);
   breedFilterInput.addEventListener("keydown", filterBreedNames);
 
-  const closeSelectModalBtn = document.querySelector(CLOSE_SELECT_MODAL_BTN);
-  closeSelectModalBtn.addEventListener("click", resetSearchModalForm);
-
-  const closeFilterModalBtn = document.querySelector(CLOSE_FILTER_MODAL_BTN);
+  const closeFilterModalBtn = document.querySelector(CLOSE_FILTER_MODAL_BTN_ID);
   closeFilterModalBtn.addEventListener("click", resetFilterModalForm);
-
-  const filterModalOpenBtn = document.querySelector(FILTER_MODAL_OPEN_BTN_ID);
-  filterModalOpenBtn.addEventListener("click", (e) =>
-    filterModalForm.scrollIntoView()
-  );
 
   const pagNav = document.querySelector("nav.pagination");
   pagNav.addEventListener("click", handlePaginationClick);
-
-  const locationBtn = document.querySelector(LOCATION_BTN);
-  locationBtn.addEventListener("click", requestUserLocation);
 
   // See if user clicked cat, dog, or some other valid animal type before landing here.
   let type = window.location.href.match(/type=(\w+)/);
@@ -65,7 +64,40 @@ window.addEventListener("load", async () => {
   }
 });
 
+// Event listeners
+async function searchAnimalType(e) {
+  e.preventDefault();
+
+  // Get form information.
+  const animalType = e.target.elements.animalType.value;
+
+  // Build the URI and request the data.
+  const params = new URLSearchParams(`type=${animalType}`);
+  let modifiedUrl = new URL(window.location);
+  modifiedUrl.searchParams.set("type", animalType);
+  window.history.replaceState({}, "", modifiedUrl);
+  await locateUserThenDisplayAnimals(params);
+
+  clearFilterTags();
+
+  // Enable filter options.
+  populateFilterForm(animalType);
+  document
+    .querySelector(FILTER_MODAL_OPEN_BTN_ID)
+    .classList.remove("is-hidden");
+}
+
 async function requestUserLocation(e) {
+  function handleNoLocation() {
+    alert("Unable to get your location");
+    document.querySelector(DISTANCE_FIELD_ID).classList.add("is-hidden");
+  }
+
+  function useLocation(position) {
+    alert("You've granted permission to use your location");
+    document.querySelector(DISTANCE_FIELD_ID).classList.remove("is-hidden");
+  }
+
   if (!navigator.geolocation) {
     handleNoLocation();
     return;
@@ -74,36 +106,15 @@ async function requestUserLocation(e) {
   }
 }
 
-function handleNoLocation() {
-  alert("Unable to get your location");
-  document.querySelector(DISTANCE_FIELD_ID).classList.add("is-hidden");
-}
-
-function useLocation(position) {
-  alert("You've granted permission to use your location");
-  document.querySelector(DISTANCE_FIELD_ID).classList.remove("is-hidden");
-}
-
-async function hasLocationBeenGranted() {
-  const result = await navigator.permissions.query({ name: "geolocation" });
-  return result.state === "granted";
-}
-
-// Event listeners
-async function searchAnimalType(e) {
-  e.preventDefault();
-  // Get form information.
-  const animalType = e.target.elements.animalType.value;
-
-  // Build the URI and request the data.
-  const params = new URLSearchParams(`type=${animalType}`);
-  await locateUserThenDisplayAnimals(params);
-
-  // Enable filter options.
-  populateFilterForm(animalType);
-  document
-    .querySelector(FILTER_MODAL_OPEN_BTN_ID)
-    .classList.remove("is-hidden");
+// Ensure modal form shows the correctly selected values when it's re-opened.
+function resetSearchModalForm(e) {
+  const type = getCurrentResultParams().get("type");
+  const searchModalForm = document.querySelector(`${TYPE_MODAL_ID} form`);
+  searchModalForm.elements[ANIMAL_TYPES_ID.slice(1)].value = type;
+  searchModalForm.elements[DISTANCE_FIELD_ID.slice(1)].value = "";
+  if (!hasLocationBeenGranted()) {
+    document.querySelector(DISTANCE_FIELD_ID).classList.add("is-hidden");
+  }
 }
 
 async function handleApplyFilters(e) {
@@ -113,54 +124,19 @@ async function handleApplyFilters(e) {
   const checked = e.target.querySelectorAll(`input[type=checkbox]:checked`);
 
   // Create query parameters.
-  let params = { type: getCurrentResultParams().get("type") };
+  const filterParams = {};
   checked.forEach((box) => {
-    let values = params[box.name] || [];
+    let values = filterParams[box.name] || [];
     values.push(box.value);
-    params[box.name] = values;
+    filterParams[box.name] = values;
   });
-  params = new URLSearchParams(Object.entries(params));
+  const params = new URLSearchParams(filterParams);
+  params.set("type", getCurrentResultParams().get("type"));
 
   // Build URI from params and request data.
   await locateUserThenDisplayAnimals(params);
-
   // Show filter tags.
-  updateFilterTags(params);
-}
-
-function updateFilterTags(params) {
-  params.delete("type");
-  const filterTags = document.querySelector(FILTER_TAGS_ID);
-
-  clearChildren(filterTags);
-  for (const [param, values] of params) {
-    values.split(",").forEach((p) => {
-      const tag = document.createElement("div");
-      tag.classList = "control";
-      tag.innerHTML = `
-      <div class="control">
-        <div class="tags has-addons">
-          <a class="tag is-link">${isNaN(p) ? p : param}</a>
-          <a class="tag is-delete"></a>
-        </div>
-      </div>`;
-      tag.addEventListener("click", removeFilterTag);
-      filterTags.append(tag);
-    });
-  }
-}
-
-async function removeFilterTag(e) {
-  const tag = e.target.closest(".control");
-  const param = tag.querySelector(".tag.is-link").textContent;
-  const filterForm = document.querySelector(`${FILTER_MODAL_ID} form`);
-  const boxes = Array.from(
-    filterForm.querySelectorAll(`input[type=checkbox]:checked`)
-  );
-  const boxToUncheck = boxes.find((b) => b.value === param || b.name === param);
-  boxToUncheck.checked = false;
-  tag.remove();
-  filterForm.requestSubmit();
+  updateFilterTags(new URLSearchParams(filterParams));
 }
 
 function filterBreedNames(e) {
@@ -175,17 +151,6 @@ function filterBreedNames(e) {
       breedField.classList.add("is-hidden");
     }
   });
-}
-
-// Ensure modal form shows the correctly selected values when it's re-opened.
-function resetSearchModalForm(e) {
-  const type = getCurrentResultParams().get("type");
-  const searchModalForm = document.querySelector(`${SEARCH_MODAL_ID} form`);
-  searchModalForm.elements[ANIMAL_TYPES_ID.slice(1)].value = type;
-  searchModalForm.elements[DISTANCE_FIELD_ID.slice(1)].value = "";
-  if (!hasLocationBeenGranted()) {
-    document.querySelector(DISTANCE_FIELD_ID).classList.add("is-hidden");
-  }
 }
 
 function resetFilterModalForm(e) {
@@ -208,26 +173,40 @@ async function handlePaginationClick(e) {
   }
 }
 
-function toggleDisableAllButtons() {
-  document
-    .querySelectorAll("button, a")
-    .forEach((el) => el.classList.toggle("disabled-anchor"));
-}
-
-function getCurrentResultParams() {
-  const searchResults = document.querySelector(SEARCH_RESULTS_ID);
-  const oldParams = searchResults.getAttribute(DATA_RESULTS_PARAMS_ATTRIB);
-  return new URLSearchParams(oldParams);
+async function hasLocationBeenGranted() {
+  const result = await navigator.permissions.query({ name: "geolocation" });
+  return result.state === "granted";
 }
 
 /**
  * UI functions
  */
+
+function locateUserThenDisplayAnimals(params) {
+  // See if location is available.
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const select = document.querySelector(`${DISTANCE_FIELD_ID} select`);
+      if (select.value) {
+        // Using user's location.
+        params.set("distance", select.value);
+        const { latitude, longitude } = position.coords;
+        params.set("location", `${latitude},${longitude}`);
+      }
+      displayAnimals(params);
+    },
+    () => {
+      // Not using user's location.
+      displayAnimals(params);
+    }
+  );
+}
+
 async function displayAnimals(params) {
   const searchResults = document.querySelector(SEARCH_RESULTS_ID);
 
   // Save relevant URI params on container.
-  searchResults.setAttribute(DATA_RESULTS_PARAMS_ATTRIB, params.toString());
+  searchResults.setAttribute(RESULTS_PARAMS_ATTRIB, params.toString());
 
   // Loading animation while getting results.
   const LOADING_CLASS = "loading";
@@ -249,25 +228,77 @@ async function displayAnimals(params) {
   window.scrollTo(0, 0);
 }
 
-function locateUserThenDisplayAnimals(params) {
-  // See if location is available.
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const select = document.querySelector(`${DISTANCE_FIELD_ID} select`);
-      if (select.value) {
-        // Using user's location.
-        params.set("distance", select.value);
-        const { latitude, longitude } = position.coords;
-        params.set("location", `${latitude},${longitude}`);
-      }
-      displayAnimals(params);
-    },
-    () => {
-      console.log(params.get("distance"));
-      // Not using user's location.
-      displayAnimals(params);
-    }
+async function populateFilterForm(animalType) {
+  const { breeds } = await getAnimalBreeds(animalType);
+  const {
+    type: { coats, colors },
+  } = await getSingleAnimalType(animalType);
+  const animalColors = document.querySelector(ANIMAL_COLOR_ID);
+  const animalCoats = document.querySelector(ANIMAL_COAT_ID);
+  const animalBreeds = document.querySelector(ANIMAL_BREED_ID);
+
+  clearChildren(animalColors);
+  clearChildren(animalCoats);
+  clearChildren(animalBreeds);
+
+  coats.forEach((coat) => {
+    animalCoats.append(createCheckbox(coat, "coat"));
+  });
+  colors.forEach((color) => {
+    animalColors.append(createCheckbox(color, "color"));
+  });
+  breeds.flat().forEach(({ name }) => {
+    animalBreeds.append(createCheckbox(name, "breed"));
+  });
+}
+
+function clearFilterTags() {
+  const filterTags = document.querySelector(FILTER_TAGS_ID);
+  clearChildren(filterTags);
+}
+
+function updateFilterTags(params) {
+  clearFilterTags();
+  for (const [param, values] of params) {
+    values.split(",").forEach((p) => {
+      const tag = document.createElement("a");
+      tag.classList = "control";
+      tag.innerHTML = `
+      <div class="control">
+        <div class="tags has-addons">
+          <a class="tag is-link">${isNaN(p) ? p : param}</a>
+          <a class="tag is-delete"></a>
+        </div>
+      </div>`;
+      tag.addEventListener("click", removeFilterTag);
+      filterTags.append(tag);
+    });
+  }
+}
+
+function removeFilterTag(e) {
+  const tag = e.target.closest(".control");
+  const param = tag.querySelector(".tag.is-link").textContent;
+  const filterForm = document.querySelector(`${FILTER_MODAL_ID} form`);
+  const boxes = Array.from(
+    filterForm.querySelectorAll(`input[type=checkbox]:checked`)
   );
+  const boxToUncheck = boxes.find((b) => b.value === param || b.name === param);
+  boxToUncheck.checked = false;
+  tag.remove();
+  filterForm.requestSubmit();
+}
+
+function toggleDisableAllButtons() {
+  document
+    .querySelectorAll("button, a")
+    .forEach((el) => el.classList.toggle("disabled-anchor"));
+}
+
+function getCurrentResultParams() {
+  const searchResults = document.querySelector(SEARCH_RESULTS_ID);
+  const oldParams = searchResults.getAttribute(RESULTS_PARAMS_ATTRIB);
+  return new URLSearchParams(oldParams);
 }
 
 function createAnimalCard(animal) {
@@ -311,30 +342,6 @@ function createAnimalCard(animal) {
   return col;
 }
 
-async function populateFilterForm(animalType) {
-  const { breeds } = await getAnimalBreeds(animalType);
-  const {
-    type: { coats, colors },
-  } = await getSingleAnimalType(animalType);
-  const animalColors = document.querySelector(ANIMAL_COLOR_ID);
-  const animalCoats = document.querySelector(ANIMAL_COAT_ID);
-  const animalBreeds = document.querySelector(ANIMAL_BREED_ID);
-
-  clearChildren(animalColors);
-  clearChildren(animalCoats);
-  clearChildren(animalBreeds);
-
-  coats.forEach((coat) => {
-    animalCoats.append(createCheckbox(coat, "coat"));
-  });
-  colors.forEach((color) => {
-    animalColors.append(createCheckbox(color, "color"));
-  });
-  breeds.flat().forEach(({ name }) => {
-    animalBreeds.append(createCheckbox(name, "breed"));
-  });
-}
-
 function createCheckbox(value, inputName) {
   const checkboxField = document.createElement("div");
   checkboxField.classList.add("field");
@@ -359,10 +366,7 @@ function createPagination(pagination) {
   pagNav.classList.remove("is-hidden");
 
   // Destructure pagination data.
-  const { current_page: current, total_pages: total, _links } = pagination;
-  const { next, previous } = _links;
-
-  pagNav.setAttribute(PAG_NAV_URI_ATTRIB, next?.href || previous?.href);
+  const { current_page: current, total_pages: total } = pagination;
 
   // Compute pagination numbers.
   const MAX = 5; // number of buttons to show at most.
@@ -452,9 +456,24 @@ async function getAnimalBreeds(type) {
   return getPetFinderData(url);
 }
 
+async function getPetFinderData(url) {
+  // Prepare headers
+  const headers = await getAuthHeaders();
+
+  // Get the data
+  const res = await fetch(url, { headers });
+  const data = await res.json();
+  return data;
+}
+
 /**
  * Token request to our server.
  */
+async function getAuthHeaders() {
+  const token = await getAccessToken();
+  return { Authorization: `Bearer ${token}` };
+}
+
 async function getAccessToken() {
   // See if it always exists in local storage.
   const appData = getAppData();
@@ -462,7 +481,6 @@ async function getAccessToken() {
     appData.auth = await getNewAccessToken();
     saveAppData(appData);
   } else {
-    console.log("Already have a token!");
   }
   return appData.auth.access_token;
 }
@@ -478,21 +496,6 @@ async function getNewAccessToken() {
 // Has token and it has not expired.
 function isTokenValid(auth) {
   return auth && Date.now() < auth.expires_at;
-}
-
-async function getAuthHeaders() {
-  const token = await getAccessToken();
-  return { Authorization: `Bearer ${token}` };
-}
-
-async function getPetFinderData(url) {
-  // Prepare headers
-  const headers = await getAuthHeaders();
-
-  // Get the data
-  const res = await fetch(url, { headers });
-  const data = await res.json();
-  return data;
 }
 
 /**
