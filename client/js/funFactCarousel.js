@@ -21,7 +21,10 @@ async function loadFacts() {
     .slice(0, 2);
 
   const facts = [dogFact, ...catFacts];
-  carousel.forEach((slide, i) => (slide.innerHTML = `<p>${facts[i]}</p>`));
+  carousel.forEach(
+    (slide, i) =>
+      (slide.innerHTML = `<p class="is-size-4 is-size-6-mobile">${facts[i]}</p>`)
+  );
 }
 
 loadFacts();
