@@ -4,6 +4,7 @@
 
 .cat-card > a > img{
     transform: scaleX(-1);
+    -webkit-filter: drop-shadow(3px 3px 3px rgba(255, 255, 255, 0.7)); 
 }
 
 .cat-card > a:hover .overlay{
@@ -18,17 +19,24 @@
     transform: scale(1);
 }
 
+.dog-card > a > img {
+    -webkit-filter: drop-shadow(3px 3px 3px rgba(255, 255, 255, 0.7));
+}
+
 .hero{
     background-image: 
                 linear-gradient(
-                    rgba(0, 0, 0, 0.1),
-                    rgba(0, 0, 0, 0.1)
+                    rgba(0, 0, 0, 0),
+                    rgba(0, 0, 0, 0)
                   ),
-                  url('../img/heroBanner.jpg');
+                  url('../img/heroFull.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+}
 
+.hero p{
+    -webkit-filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.7));
 }
 
 .overlay {
@@ -49,3 +57,4 @@
   font-size: 48px;
   color: #f1e8e4;
 }
+
