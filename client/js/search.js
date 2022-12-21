@@ -45,7 +45,7 @@ window.addEventListener("load", async () => {
   filterModalForm.addEventListener("submit", handleApplyFilters);
 
   const breedFilterInput = document.querySelector(BREED_FILTER_INPUT_ID);
-  breedFilterInput.addEventListener("keydown", filterBreedNames);
+  breedFilterInput.addEventListener("keyup", filterBreedNames);
 
   const closeFilterModalBtn = document.querySelector(CLOSE_FILTER_MODAL_BTN_ID);
   closeFilterModalBtn.addEventListener("click", resetFilterModalForm);
@@ -218,6 +218,11 @@ async function displayAnimals(params) {
 
   clearChildren(searchResults);
 
+  if (animals.length === 0) {
+    searchResults.innerHTML = `
+      <h2 class="has-text-grey-light has-text-centered is-size-4">No matching results</h2>
+    `;
+  }
   // Display new results.
   animals.forEach((animal) => {
     const col = createAnimalCard(animal);
