@@ -23,7 +23,7 @@ const CLOSE_FILTER_MODAL_BTN_ID = "#closeFilterBtn";
 const FILTER_MODAL_OPEN_BTN_ID = "#filterModalOpenBtn";
 const FILTER_TAGS_ID = "#filterTags";
 
-const DEFAULT_ANIMAL_PHOTO = "./img/cat3.png";
+const DEFAULT_ANIMAL_PHOTO = "./img/default-photo.png";
 
 window.addEventListener("load", async () => {
   // Set up event listeners
