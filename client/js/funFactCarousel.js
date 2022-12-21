@@ -55,23 +55,3 @@ function showSlides(n) {
     slides[i].style.display = "none";
   }
 }
-
-// Carousel fun fact population
-
-// fetch(`https://meowfacts.herokuapp.com/?count=${numberOfFacts}`)
-//   .then((response) => response.json())
-//   .then(({ data }) => addToUI(data))
-//   .catch((err) => console.error(err));
-
-// function addToUI(facts) {
-//   let i = 2;
-//   const carousel = document.querySelectorAll(".carousel-inner");
-//   carousel.forEach((slide) => {
-//     slide.innerHTML = `
-//         <div class="is-size-5">
-//             <p class="block">${facts[i]}</p>
-//         </div>
-//     `;
-//     i++;
-//   });
-// }
