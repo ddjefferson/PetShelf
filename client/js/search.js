@@ -92,12 +92,18 @@ async function hasLocationBeenGranted() {
 // Event listeners
 async function searchAnimalType(e) {
   e.preventDefault();
+
   // Get form information.
   const animalType = e.target.elements.animalType.value;
 
   // Build the URI and request the data.
   const params = new URLSearchParams(`type=${animalType}`);
+  let modifiedUrl = new URL(window.location);
+  modifiedUrl.searchParams.set("type", animalType);
+  window.history.replaceState({}, "", modifiedUrl);
   await locateUserThenDisplayAnimals(params);
+
+  clearFilterTags();
 
   // Enable filter options.
   populateFilterForm(animalType);
@@ -113,29 +119,33 @@ async function handleApplyFilters(e) {
   const checked = e.target.querySelectorAll(`input[type=checkbox]:checked`);
 
   // Create query parameters.
-  let params = { type: getCurrentResultParams().get("type") };
+  const filterParams = {};
   checked.forEach((box) => {
-    let values = params[box.name] || [];
+    let values = filterParams[box.name] || [];
     values.push(box.value);
-    params[box.name] = values;
+    filterParams[box.name] = values;
   });
-  params = new URLSearchParams(Object.entries(params));
+  const params = new URLSearchParams(filterParams);
+  params.set("type", getCurrentResultParams().get("type"));
 
   // Build URI from params and request data.
   await locateUserThenDisplayAnimals(params);
-
+  console.log(params.toString());
   // Show filter tags.
-  updateFilterTags(params);
+  updateFilterTags(new URLSearchParams(filterParams));
 }
 
-function updateFilterTags(params) {
-  params.delete("type");
+function clearFilterTags() {
   const filterTags = document.querySelector(FILTER_TAGS_ID);
 
   clearChildren(filterTags);
+}
+
+function updateFilterTags(params) {
+  clearFilterTags();
   for (const [param, values] of params) {
     values.split(",").forEach((p) => {
-      const tag = document.createElement("div");
+      const tag = document.createElement("a");
       tag.classList = "control";
       tag.innerHTML = `
       <div class="control">
@@ -227,6 +237,7 @@ async function displayAnimals(params) {
   const searchResults = document.querySelector(SEARCH_RESULTS_ID);
 
   // Save relevant URI params on container.
+  console.log(params.toString());
   searchResults.setAttribute(DATA_RESULTS_PARAMS_ATTRIB, params.toString());
 
   // Loading animation while getting results.
@@ -260,6 +271,7 @@ function locateUserThenDisplayAnimals(params) {
         const { latitude, longitude } = position.coords;
         params.set("location", `${latitude},${longitude}`);
       }
+      console.log(params.toString());
       displayAnimals(params);
     },
     () => {
