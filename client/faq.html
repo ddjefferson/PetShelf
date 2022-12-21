@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FAQs</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="css/index.css" />
     <link
       rel="icon"
@@ -15,7 +22,7 @@
   <body id="FAQ">
     <header>
       <!-- Top Nav Bar Starts -->
-      <nav class="navbar has-shadow">
+      <nav class="navbar">
         <div class="navbar-brand">
           <a
             class="is-light is-flex is-align-content-center"
@@ -55,39 +62,26 @@
             <div class="navbar-item">
               <div class="field is-grouped">
                 <p class="control">
-                  <a
-                    class="bd-heart-button button is-light"
-                    data-social-network="#"
-                    data-social-action="#"
-                    data-social-target="#"
-                    target="#"
-                    href="./favorites.html"
-                  >
+                  <a class="button is-light" target="#" href="./favorites.html">
                     <span
-                      ><img
-                        src="img/heart.png"
-                        alt="heart-icon1"
-                        style="max-height: 50px"
-                        class="py-2 px-2"
-                    /></span>
+                      ><i class="fa-regular fa-heart fa-2x has-text-black"></i
+                    ></span>
                   </a>
                 </p>
                 <p class="control">
-                  <a
-                    class="bd-heart-button button is-light"
-                    data-social-network="#"
-                    data-social-action="#"
-                    data-social-target="#"
-                    target="#"
-                    href="./petguide.html"
-                  >
+                  <a class="button is-light" target="#" href="./petguide.html">
                     <span
-                      ><img
-                        src="img/book.png"
-                        alt="heart-icon1"
-                        style="max-height: 50px"
-                        class="py-2 px-2"
-                    /></span>
+                      ><i class="fa-solid fa-book fa-2x has-text-black"></i
+                    ></span>
+                  </a>
+                </p>
+                <p class="control">
+                  <a class="button is-light" target="#" href="./search.html">
+                    <span
+                      ><i
+                        class="fa-solid fa-magnifying-glass fa-2x has-text-black"
+                      ></i
+                    ></span>
                   </a>
                 </p>
               </div>
@@ -109,51 +103,19 @@
       <div class="columns">
         <!-- column1 starts -->
         <div class="column">
-          <!-- Card 1 Starts -->
-          <div class="card">
-            <div class="card__inner">
-              <div class="card__face card__face--front">
-                <p>
-                  <img src="img/logo2transparent.png" alt="pet shelf logo" />
-                </p>
-              </div>
-              <div class="card__face card__face--back">
-                <div class="card__content">
-                  <div class="card__header">
-                    <img src="img/logo2.png" alt="" class="PetShelf" />
-                    <h2>Pet Shelf</h2>
-                  </div>
-                  <div class="card__body">
-                    <h3>Pet Shelf Project</h3>
-                    <p>
-                      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                      Atque eos ipsum laboriosam labore aperiam voluptatibus quo
-                      nesciunt laudantium exercitationem iure?
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Card 1 Ends -->
-        </div>
-        <!-- column1 starts -->
-
-        <!-- column2 starts -->
-        <div class="column">
           <!-- Card 2 Starts -->
-          <div class="card2">
-            <div class="card2__inner">
-              <div class="card2__face card__face--front">
+          <div class="flip-card">
+            <div class="flip-card__inner">
+              <div class="flip-card__face flip-card__face--front">
                 <p><img src="img/logo2transparent.png" alt="" /></p>
               </div>
-              <div class="card2__face card__face--back">
-                <div class="card2__content">
-                  <div class="card2__header">
-                    <img src="img/logo2.png" alt="" class="PetShelf2" />
+              <div class="flip-card__face flip-card__face--back">
+                <div class="flip-card__content">
+                  <div class="flip-card__header">
+                    <img src="img/logo2.png" alt="" class="PetShelf3" />
                     <h2>Pet Shelf</h2>
                   </div>
-                  <div class="card2__body">
+                  <div class="flip-card__body">
                     <h3>Pet Shelf Project</h3>
                     <p>
                       Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -167,37 +129,65 @@
           </div>
           <!-- Card 2 Ends -->
         </div>
-        <!-- column3 starts -->
-
-        <!-- column3 starts -->
+        <!-- column1 ends -->
+        <!-- column2 starts -->
         <div class="column">
-          <!-- Card 3 Starts -->
-          <div class="card3">
-            <div class="card3__inner">
-              <div class="card3__face card__face--front">
+          <!-- Card 2 Starts -->
+          <div class="flip-card">
+            <div class="flip-card__inner">
+              <div class="flip-card__face flip-card__face--front">
                 <p><img src="img/logo2transparent.png" alt="" /></p>
               </div>
-              <div class="card3__face card__face--back">
-                <div class="card3__content">
-                  <div class="card3__header">
+              <div class="flip-card__face flip-card__face--back">
+                <div class="flip-card__content">
+                  <div class="flip-card__header">
                     <img src="img/logo2.png" alt="" class="PetShelf3" />
                     <h2>Pet Shelf</h2>
                   </div>
-                  <div class="card3__body">
+                  <div class="flip-card__body">
                     <h3>Pet Shelf Project</h3>
                     <p>
-                      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                      Nam velit sequi optio illum eligendi quisquam sit
-                      aspernatur provident? Ex, itaque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Molestiae rem neque temporibus ipsa enim similique,
+                      officiis saepe vero fuga libero.
                     </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- Card 3 Ends -->
+          <!-- Card 2 Ends -->
         </div>
+        <!-- column2 ends -->
         <!-- column3 starts -->
+        <div class="column">
+          <!-- Card 3 Starts -->
+          <div class="flip-card">
+            <div class="flip-card__inner">
+              <div class="flip-card__face flip-card__face--front">
+                <p><img src="img/logo2transparent.png" alt="" /></p>
+              </div>
+              <div class="flip-card__face flip-card__face--back">
+                <div class="flip-card__content">
+                  <div class="flip-card__header">
+                    <img src="img/logo2.png" alt="" class="PetShelf3" />
+                    <h2>Pet Shelf</h2>
+                  </div>
+                  <div class="flip-card__body">
+                    <h3>Pet Shelf Project</h3>
+                    <p>
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Molestiae rem neque temporibus ipsa enim similique,
+                      officiis saepe vero fuga libero.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Card 2 Ends -->
+        </div>
+        <!-- column3 ends -->
       </div>
     </section>
     <!-- Section 1 Ends  -->
